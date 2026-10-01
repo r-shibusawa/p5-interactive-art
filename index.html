@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>p5.js インタラクティブアート コード集</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+JP:wght@400;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #000; --fg: #ededed; --muted: #8a8a8a; --dim: #555; --line: #1e1e1e; --panel: #0b0b0b;
+      --accent: #c6ff3d;
+      --sans: 'Inter', 'Noto Sans JP', system-ui, sans-serif;
+      --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--sans); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; }
+    .wrap { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+
+    header { padding: 96px 0 64px; border-bottom: 1px solid var(--line); }
+    .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase; }
+    .eyebrow b { color: var(--accent); font-weight: 600; }
+    h1 { font-size: clamp(36px, 7vw, 72px); line-height: 1.1; font-weight: 900; letter-spacing: -0.02em; margin: 20px 0 20px; }
+    .lead { color: var(--muted); margin: 0 0 36px; max-width: 34em; }
+    .actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; font: 600 14px var(--sans); text-decoration: none; border: 1px solid var(--fg); color: var(--fg); background: transparent; cursor: pointer; border-radius: 0; transition: background .15s, color .15s; }
+    .btn:hover { background: var(--fg); color: var(--bg); }
+    .btn.primary { background: var(--accent); border-color: var(--accent); color: #000; }
+    .btn.primary:hover { background: #fff; border-color: #fff; }
+    .btn.small { padding: 7px 14px; font-size: 13px; }
+
+    .howto { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--line); }
+    .howto div { padding: 28px 20px 28px 0; font-size: 14px; color: var(--muted); }
+    .howto div + div { padding-left: 20px; border-left: 1px solid var(--line); }
+    .howto span { display: block; font-family: var(--mono); color: var(--accent); font-size: 12px; margin-bottom: 8px; }
+    .howto b { color: var(--fg); font-weight: 700; }
+    @media (max-width: 720px) { .howto { grid-template-columns: 1fr 1fr; } .howto div:nth-child(3) { padding-left: 0; border-left: none; } }
+
+    .group { margin-top: 72px; }
+    .group-head { display: flex; align-items: baseline; gap: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--fg); }
+    .group-head .no { font-family: var(--mono); font-size: 12px; color: var(--accent); letter-spacing: 0.12em; }
+    .group-head h2 { margin: 0; font-size: 20px; font-weight: 800; }
+    .group-note { color: var(--muted); font-size: 14px; margin: 14px 0 0; }
+
+    details { border-bottom: 1px solid var(--line); }
+    summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 56px 1fr auto 20px; gap: 16px; align-items: center; padding: 20px 0; }
+    summary::-webkit-details-marker { display: none; }
+    summary:hover .title { color: var(--accent); }
+    .num { font-family: var(--mono); font-size: 14px; color: var(--dim); }
+    .title { font-weight: 700; font-size: 16px; transition: color .15s; }
+    .desc { display: block; color: var(--muted); font-size: 13px; font-weight: 400; }
+    .tags { display: flex; gap: 6px; }
+    .tag { font-family: var(--mono); font-size: 11px; color: var(--muted); border: 1px solid #333; padding: 1px 8px; letter-spacing: 0.06em; }
+    .chev { font-family: var(--mono); color: var(--dim); transition: transform .2s; }
+    details[open] .chev { transform: rotate(45deg); color: var(--accent); }
+    @media (max-width: 640px) { summary { grid-template-columns: 40px 1fr 16px; } .tags { display: none; } }
+
+    .body { padding: 0 0 24px 72px; }
+    @media (max-width: 640px) { .body { padding-left: 0; } }
+    .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+    pre { margin: 0; background: var(--panel); border: 1px solid var(--line); padding: 18px 20px; overflow: auto; max-height: 520px; font: 13px/1.6 var(--mono); color: #d8d8d8; }
+    .copied { background: var(--accent) !important; border-color: var(--accent) !important; color: #000 !important; }
+
+    footer { margin: 96px 0 0; padding: 32px 0 48px; border-top: 1px solid var(--line); color: var(--dim); font: 12px var(--mono); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="eyebrow"><b>p5.js</b> / Interactive Art Workshop</div>
+      <h1>インタラクティブアート<br>コード集</h1>
+      <p class="lead">コピーして p5.js Web Editor に貼り付けるだけ。数字を変えて、組み合わせて、自分の作品にしよう。</p>
+      <div class="actions">
+        <a class="btn primary" href="https://editor.p5js.org/" target="_blank" rel="noopener">p5.js Web Editor を開く →</a>
+        <a class="btn" id="zip" href="#">ZIP でダウンロード</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="howto">
+      <div><span>01</span>番号を開いて<b>「コードをコピー」</b></div>
+      <div><span>02</span>エディタの <b>sketch.js</b> を全部消して貼り付け</div>
+      <div><span>03</span>左上の <b>▶</b> で実行</div>
+      <div><span>04</span>音のスケッチは<b>一番下の道具まで</b>コピーして、まずクリック</div>
+    </div>
+
+    <div id="list"></div>
+
+    <footer>p5.js Interactive Art Workshop — MIT License. 自由に改造して使ってください。</footer>
+  </div>
+
+  <script>
+    const REPO = 'r-shibusawa/p5-interactive-art';
+    document.getElementById('zip').href = `https://github.com/${REPO}/archive/refs/heads/main.zip`;
+
+    // type: 'sketch'（sketch.js に貼る） / 'recipe'（ライブコーディング・スタジオの入力欄に貼る）
+    const GROUPS = [
+      { no: 'STEP 1', title: 'はじめの一歩', items: [
+        { id: '00_hello', title: 'はじめてのスケッチ', desc: 'マウスに円がついてくる' },
+        { id: '01_shapes_face', title: '図形と色でキャラクター', desc: '目がマウスを追うロボット' },
+      ]},
+      { no: 'STEP 2', title: 'マウスで描く', items: [
+        { id: '02_mouse_paint', title: 'お絵かきツール', desc: 'ドラッグで描く・C で消す・S で保存' },
+        { id: '03_rainbow_brush', title: 'レインボーブラシ', desc: '色が変わる＆速いと太くなる筆' },
+        { id: '04_kaleidoscope', title: '万華鏡ペイント', desc: '描いた線が回転・反転してコピー' },
+      ]},
+      { no: 'STEP 3', title: 'ランダムと動き', items: [
+        { id: '05_generative', title: 'ジェネラティブアート', desc: 'クリックで新しい作品が生まれる' },
+        { id: '06_fireworks', title: '花火（パーティクル）', desc: 'クリックした場所で爆発' },
+      ]},
+      { no: 'STEP 4', title: '音で遊ぶ', items: [
+        { id: '07_sound_balls', title: '音の出るボール', desc: '跳ねるたびにメロディが鳴る', tags: ['SOUND'] },
+        { id: '08_theremin', title: 'テルミン', desc: 'マウスで演奏する電子楽器', tags: ['SOUND'] },
+        { id: '09_key_piano', title: 'キーボードピアノ', desc: 'A〜K キーでドレミ＋光の波紋', tags: ['SOUND'] },
+        { id: '10_mic_visualizer', title: 'マイク・ビジュアライザー', desc: '声や音楽に反応する光の輪', tags: ['MIC'] },
+        { id: '11_voice_monster', title: '声で動くモンスター', desc: '大声を出すと怒り出す', tags: ['MIC'] },
+      ]},
+      { no: 'STEP 5', title: '自由制作', items: [
+        { id: '12_webcam_mosaic', title: 'Webカメラ・ドットアート', desc: 'カメラ映像を丸の集まりに', tags: ['CAMERA'] },
+        { id: '13_sound_particles', title: '音に反応するパーティクル', desc: '自由制作のベースにどうぞ', tags: ['MIC'] },
+      ]},
+      { no: 'LIVE CODING', title: 'ライブコーディング', note: 'まず 14 のスタジオを sketch.js に貼って ▶。L01〜L08 のレシピは、スタジオの左の入力欄に貼って Ctrl + Enter（Mac は ⌘ + Enter）。演奏を止めずに音楽と映像が切りかわります。', items: [
+        { id: '14_livecoding', title: 'ライブコーディング・スタジオ', desc: '本体 — コードを書きかえながら音楽と映像を演奏', tags: ['SOUND', 'LIVE'] },
+        { id: '01_first_beat', type: 'recipe', title: 'はじめてのビート', desc: 'x と . でリズムをつくる' },
+        { id: '02_drum_patterns', type: 'recipe', title: 'ドラムパターン', desc: 'kick / snare / hat / clap とポリリズム' },
+        { id: '03_bassline', type: 'recipe', title: 'ベースライン', desc: 'synth で音階を鳴らす・音色を変える' },
+        { id: '04_melody', type: 'recipe', title: 'メロディとランダム', desc: '? でランダムなメロディ、パッドを重ねる' },
+        { id: '05_my_visual', type: 'recipe', title: '映像を自分で書く', desc: 'visual(v => …) で音に反応する映像' },
+        { id: '06_visual_recipes', type: 'recipe', title: '回転する光', desc: 'HSB と rotate の映像レシピ' },
+        { id: '07_build_and_drop', type: 'recipe', title: 'ビルドアップ → ドロップ', desc: '少しずつ足して盛り上げる展開' },
+        { id: '08_full_set', type: 'recipe', title: 'フルセット', desc: '音楽と映像がそろったライブ演奏のお手本' },
+      ]},
+      { no: 'AI', title: 'Teachable Machine と連携', note: 'Teachable Machine で学習させた画像分類モデルの共有リンクを MODEL_URL に貼って使います。', items: [
+        { id: '15_teachable_machine', title: 'AI で反応するアート', desc: '自分で学習させた分類結果で、色・音・粒が変わる', tags: ['CAMERA', 'AI'] },
+      ]},
+    ];
+
+    const list = document.getElementById('list');
+    for (const g of GROUPS) {
+      const sec = document.createElement('section');
+      sec.className = 'group';
+      sec.innerHTML = `<div class="group-head"><span class="no">${g.no}</span><h2>${g.title}</h2></div>` +
+        (g.note ? `<p class="group-note">${g.note}</p>` : '');
+      for (const s of g.items) sec.appendChild(makeItem(s));
+      list.appendChild(sec);
+    }
+
+    function makeItem(s) {
+      const recipe = s.type === 'recipe';
+      const path = recipe ? `livecoding/${s.id}.js` : `sketches/${s.id}/sketch.js`;
+      const run = recipe ? `sketches/14_livecoding/index.html?r=${s.id}` : `sketches/${s.id}/index.html`;
+      const d = document.createElement('details');
+      d.innerHTML = `
+        <summary>
+          <span class="num">${recipe ? 'L' : ''}${s.id.slice(0, 2)}</span>
+          <span><span class="title">${s.title}</span><span class="desc">${s.desc}</span></span>
+          <span class="tags">${(s.tags || (recipe ? ['RECIPE'] : [])).map(t => `<span class="tag">${t}</span>`).join('')}</span>
+          <span class="chev">+</span>
+        </summary>
+        <div class="body">
+          <div class="toolbar">
+            <button class="btn small primary copy">コードをコピー</button>
+            <a class="btn small" href="${run}" target="_blank" rel="noopener">${recipe ? 'スタジオで開く' : '動かしてみる'} ↗</a>
+            <a class="btn small" href="https://github.com/${REPO}/blob/main/${path}" target="_blank" rel="noopener">GitHub</a>
+          </div>
+          <pre><code>読み込み中…</code></pre>
+        </div>`;
+      const code = d.querySelector('code');
+      const btn = d.querySelector('.copy');
+      let text = '';
+      fetch(path)
+        .then(r => r.text())
+        .then(t => { text = t; code.textContent = t; })
+        .catch(() => { code.textContent = '読み込みに失敗しました。「GitHub」から開いてください。'; });
+      btn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch (e) {
+          const ta = document.createElement('textarea');
+          ta.value = text; document.body.appendChild(ta); ta.select();
+          document.execCommand('copy'); ta.remove();
+        }
+        btn.textContent = 'コピーしました';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'コードをコピー'; btn.classList.remove('copied'); }, 1500);
+      });
+      return d;
+    }
+  </script>
+</body>
+</html>
