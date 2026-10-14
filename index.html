@@ -9,7 +9,7 @@
   <style>
     :root {
       --bg: #000; --fg: #ededed; --muted: #8a8a8a; --dim: #555; --line: #1e1e1e;
-      --s1: #c6ff3d; --s2: #5ee6ff;
+      --s1: #c6ff3d; --s2: #5ee6ff; --s3: #ff8a5b; --s4: #c792ff;
       --sans: 'Inter', 'Noto Sans JP', system-ui, sans-serif;
       --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
     }
@@ -24,12 +24,15 @@
     .series { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border-bottom: 1px solid var(--line); }
     @media (max-width: 720px) { .series { grid-template-columns: 1fr; } }
     .card { background: var(--bg); padding: 48px 32px 40px 0; display: flex; flex-direction: column; gap: 12px; transition: background .15s; }
-    .card + .card { padding-left: 32px; }
-    @media (max-width: 720px) { .card + .card { padding-left: 0; } }
+    .card:nth-child(even) { padding-left: 32px; }
+    .card:nth-child(n+3) { border-top: 1px solid var(--line); }
+    @media (max-width: 720px) { .card:nth-child(even) { padding-left: 0; } .card + .card { border-top: 1px solid var(--line); } }
     .card:hover { background: #050505; }
     .card .no { font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em; }
     .card:nth-child(1) .no, .card:nth-child(1) .go { color: var(--s1); }
     .card:nth-child(2) .no, .card:nth-child(2) .go { color: var(--s2); }
+    .card:nth-child(3) .no, .card:nth-child(3) .go { color: var(--s3); }
+    .card:nth-child(4) .no, .card:nth-child(4) .go { color: var(--s4); }
     .card h2 { margin: 0; font-size: 32px; font-weight: 900; line-height: 1.2; }
     .card p { margin: 0; color: var(--muted); font-size: 15px; }
     .card ul { margin: 8px 0 0; padding: 0; list-style: none; color: var(--dim); font-size: 13px; font-family: var(--mono); display: grid; gap: 4px; }
@@ -62,6 +65,20 @@
         <h2>フラクタル</h2>
         <p>再帰、自己相似、無限ズーム。木・シダ・雪片・マンデルブロ集合を自分の手で動かし、音と組み合わせる。</p>
         <ul><li>00–09 再帰・自然・幾何・複素数</li><li>10–13 音とフラクタル、無限ズーム</li><li>14–15 山脈、声で動くジュリア集合</li></ul>
+        <span class="go">開く →</span>
+      </a>
+      <a class="card" href="series3/">
+        <span class="no">SERIES 3</span>
+        <h2>人工生命</h2>
+        <p>単純なルールから生まれる「生きているような」動き。セル・オートマトン、群れ、生態系、進化。</p>
+        <ul><li>00–09 ランダムウォーク、ライフゲーム、群れ、進化</li><li>10–13 ライフゲーム音楽、声におどろく群れ</li><li>14–15 ラングトンのアリ、粘菌</li></ul>
+        <span class="go">開く →</span>
+      </a>
+      <a class="card" href="series4/">
+        <span class="no">SERIES 4</span>
+        <h2>カオス</h2>
+        <p>きまりがあるのに予測できない。ロジスティック写像、二重振り子、ローレンツの蝶、分岐図。</p>
+        <ul><li>00–09 写像、振り子、三体、アトラクター</li><li>10–13 カオス・メロディ、声でカオスを操る</li><li>14–15 レスラー、声でゆらす振り子</li></ul>
         <span class="go">開く →</span>
       </a>
     </div>
