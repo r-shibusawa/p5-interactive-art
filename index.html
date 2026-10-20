@@ -9,7 +9,7 @@
   <style>
     :root {
       --bg: #000; --fg: #ededed; --muted: #8a8a8a; --dim: #555; --line: #1e1e1e;
-      --s1: #c6ff3d; --s2: #5ee6ff; --s3: #ff8a5b; --s4: #c792ff;
+      --s1: #c6ff3d; --s2: #5ee6ff; --s3: #ff8a5b; --s4: #c792ff; --s5: #ffd166; --s6: #7cf4a6; --s7: #ff9ecd; --s8: #8ab4ff; --s9: #ffb86b;
       --sans: 'Inter', 'Noto Sans JP', system-ui, sans-serif;
       --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
     }
@@ -33,6 +33,12 @@
     .card:nth-child(2) .no, .card:nth-child(2) .go { color: var(--s2); }
     .card:nth-child(3) .no, .card:nth-child(3) .go { color: var(--s3); }
     .card:nth-child(4) .no, .card:nth-child(4) .go { color: var(--s4); }
+    .card:nth-child(5) .no, .card:nth-child(5) .go { color: var(--s5); }
+    .card:nth-child(6) .no, .card:nth-child(6) .go { color: var(--s6); }
+    .card:nth-child(7) .no, .card:nth-child(7) .go { color: var(--s7); }
+    .card:nth-child(8) .no, .card:nth-child(8) .go { color: var(--s8); }
+    .card:nth-child(9) .no, .card:nth-child(9) .go { color: var(--s9); }
+
     .card h2 { margin: 0; font-size: 32px; font-weight: 900; line-height: 1.2; }
     .card p { margin: 0; color: var(--muted); font-size: 15px; }
     .card ul { margin: 8px 0 0; padding: 0; list-style: none; color: var(--dim); font-size: 13px; font-family: var(--mono); display: grid; gap: 4px; }
@@ -79,6 +85,41 @@
         <h2>カオス</h2>
         <p>きまりがあるのに予測できない。ロジスティック写像、二重振り子、ローレンツの蝶、分岐図。</p>
         <ul><li>00–09 写像、振り子、三体、アトラクター</li><li>10–13 カオス・メロディ、声でカオスを操る</li><li>14–15 レスラー、声でゆらす振り子</li></ul>
+        <span class="go">開く →</span>
+      </a>
+      <a class="card" href="series5/">
+        <span class="no">SERIES 5</span>
+        <h2>信号処理</h2>
+        <p>波を見て、聞いて、分解する。サンプリング、フーリエ変換、フィルタ、シンセサイザー。</p>
+        <ul><li>00–09 正弦波、サンプリング、DFT、フィルタ</li><li>10–13 シンセ、チューナー、波形を描く</li><li>14–15 ドップラー、うなり</li></ul>
+        <span class="go">開く →</span>
+      </a>
+      <a class="card" href="series6/">
+        <span class="no">SERIES 6</span>
+        <h2>通信理論</h2>
+        <p>0 と 1 を遠くへ正しく速く。変調、誤り訂正、圧縮、暗号、シャノンの定理。</p>
+        <ul><li>00–09 ビット、エントロピー、変調、ハミング、ハフマン</li><li>10–13 DTMF、モールス、パケット、通信路容量</li><li>14–15 CDMA、周波数ホッピング</li></ul>
+        <span class="go">開く →</span>
+      </a>
+      <a class="card" href="series7/">
+        <span class="no">SERIES 7</span>
+        <h2>音楽情報処理</h2>
+        <p>音階・リズム・音色・メロディを数で。ビート検出、クロマ、採譜、ルールで作曲。</p>
+        <ul><li>00–09 音階、シーケンサー、ビート、ADSR、マルコフ</li><li>10–13 アルペジオ、タップテンポ、生成音楽、調の推定</li><li>14–15 FM 音源、音の指紋</li></ul>
+        <span class="go">開く →</span>
+      </a>
+      <a class="card" href="series8/">
+        <span class="no">SERIES 8</span>
+        <h2>複雑ネットワーク</h2>
+        <p>点と線でつながる世界。最短経路、スモールワールド、ハブ、感染、ページランク。</p>
+        <ul><li>00–09 グラフ、探索、最短経路、ランダム・スケールフリー</li><li>10–13 グラフ音楽、連鎖、ネットワークを育てる</li><li>14–15 パーコレーション、巡回セールスマン</li></ul>
+        <span class="go">開く →</span>
+      </a>
+      <a class="card" href="series9/">
+        <span class="no">SERIES 9</span>
+        <h2>位相的データ解析</h2>
+        <p>データの「形」を数える。点群から穴を見つけ、バーコードで記録する TDA。</p>
+        <ul><li>00–09 点群、リップス複体、ベッチ数、バーコード、Mapper</li><li>10–13 バーコードを聞く、声の輪、点を置いて穴</li><li>14–15 トーラス、カメラで穴を数える</li></ul>
         <span class="go">開く →</span>
       </a>
     </div>

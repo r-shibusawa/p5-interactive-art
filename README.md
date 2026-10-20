@@ -10,6 +10,11 @@
 | 2 | [フラクタル](series2/) | 再帰、自己相似、無限ズーム。木・シダ・雪片・マンデルブロ集合、音とフラクタル | [サイト](https://r-shibusawa.github.io/p5-interactive-art/series2/) |
 | 3 | [人工生命](series3/) | セル・オートマトン、群れ、生態系、進化。単純なルールから生まれる「生きているような」動き | [サイト](https://r-shibusawa.github.io/p5-interactive-art/series3/) |
 | 4 | [カオス](series4/) | ロジスティック写像、二重振り子、ローレンツ・アトラクター、分岐図。きまりがあるのに予測できない | [サイト](https://r-shibusawa.github.io/p5-interactive-art/series4/) |
+| 5 | [信号処理](series5/) | 正弦波、サンプリング、フーリエ変換、フィルタ、シンセサイザー。波を見て聞いて分解する | [サイト](https://r-shibusawa.github.io/p5-interactive-art/series5/) |
+| 6 | [通信理論](series6/) | ビット、エントロピー、変調、誤り訂正、圧縮、暗号、シャノンの定理 | [サイト](https://r-shibusawa.github.io/p5-interactive-art/series6/) |
+| 7 | [音楽情報処理](series7/) | 音階、リズム、音色、ビート検出、クロマ、自動採譜、ルールで作曲 | [サイト](https://r-shibusawa.github.io/p5-interactive-art/series7/) |
+| 8 | [複雑ネットワーク](series8/) | グラフ探索、最短経路、スモールワールド、スケールフリー、感染、ページランク | [サイト](https://r-shibusawa.github.io/p5-interactive-art/series8/) |
+| 9 | [位相的データ解析](series9/) | 点群、リップス複体、ベッチ数、パーシステント・バーコード、Mapper | [サイト](https://r-shibusawa.github.io/p5-interactive-art/series9/) |
 
 各シリーズは 110 分の授業を想定した 16 本のスケッチと、進め方の説明（各フォルダの README）で構成されています。
 
