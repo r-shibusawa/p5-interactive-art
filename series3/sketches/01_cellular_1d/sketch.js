@@ -68,8 +68,8 @@ function applyRule(a, b, c) {
 }
 
 function keyPressed() {
-  if (keyCode === RIGHT_ARROW) rule = (rule + 1) % 256;
-  if (keyCode === LEFT_ARROW) rule = (rule + 255) % 256;
+  if (key === RIGHT_ARROW) rule = (rule + 1) % 256;
+  if (key === LEFT_ARROW) rule = (rule + 255) % 256;
   if (key === '1') rule = 30;
   if (key === '2') rule = 90;
   if (key === '3') rule = 110;

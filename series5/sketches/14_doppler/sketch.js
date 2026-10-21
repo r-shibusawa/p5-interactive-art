@@ -67,8 +67,8 @@ function mousePressed() {
   if (!playing) setTone(heard, 0);
 }
 function keyPressed() {
-  if (keyCode === UP_ARROW) speed = min(7, speed + 0.5);
-  if (keyCode === DOWN_ARROW) speed = max(0, speed - 0.5);
+  if (key === UP_ARROW) speed = min(7, speed + 0.5);
+  if (key === DOWN_ARROW) speed = max(0, speed - 0.5);
 }
 
 // ---------- やってみよう ----------

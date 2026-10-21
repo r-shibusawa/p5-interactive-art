@@ -82,11 +82,11 @@ function keyPressed() {
     gen = presets[current].gen;
     generate();
   }
-  if (keyCode === UP_ARROW && gen < 7) {
+  if (key === UP_ARROW && gen < 7) {
     gen++;
     generate();
   }
-  if (keyCode === DOWN_ARROW && gen > 0) {
+  if (key === DOWN_ARROW && gen > 0) {
     gen--;
     generate();
   }

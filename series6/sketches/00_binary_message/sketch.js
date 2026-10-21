@@ -79,7 +79,7 @@ function keyTyped() {
   if (key.length === 1 && key.charCodeAt(0) < 128 && message.length < 18) message += key.toUpperCase();
 }
 function keyPressed() {
-  if (keyCode === BACKSPACE) message = message.slice(0, -1);
+  if (key === BACKSPACE) message = message.slice(0, -1);
 }
 function mousePressed() {
   sending = true;

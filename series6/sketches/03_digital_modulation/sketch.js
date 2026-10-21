@@ -79,8 +79,8 @@ function draw() {
 
 function keyPressed() {
   if (key >= '1' && key <= '3') mode = int(key);
-  if (keyCode === UP_ARROW) speed = min(8, speed + 1);
-  if (keyCode === DOWN_ARROW) speed = max(0, speed - 1);
+  if (key === UP_ARROW) speed = min(8, speed + 1);
+  if (key === DOWN_ARROW) speed = max(0, speed - 1);
 }
 function mousePressed() {
   bits = bits.map(() => (random() < 0.5 ? 1 : 0));

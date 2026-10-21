@@ -73,8 +73,8 @@ function mousePressed() {
 }
 
 function keyPressed() {
-  if (keyCode === UP_ARROW) rough = min(0.9, rough + 0.05);
-  if (keyCode === DOWN_ARROW) rough = max(0.1, rough - 0.05);
+  if (key === UP_ARROW) rough = min(0.9, rough + 0.05);
+  if (key === DOWN_ARROW) rough = max(0.1, rough - 0.05);
   makeMountains();
   if (key === 's' || key === 'S') saveCanvas('mountains', 'png');
 }

@@ -111,7 +111,7 @@ function keyTyped() {
   }
 }
 function keyPressed() {
-  if (keyCode === BACKSPACE && text_.length > 2) {
+  if (key === BACKSPACE && text_.length > 2) {
     text_ = text_.slice(0, -1);
     build();
   }
