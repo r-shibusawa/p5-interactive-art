@@ -24,8 +24,12 @@
 | 16 | [行列・線形計画・FFT・数論](series16/) | LUP 分解、最小二乗法、単体法、双対性、FFT、ユークリッド、中国剰余定理、RSA、素数判定 | [サイト](https://r-shibusawa.github.io/p5-interactive-art/series16/) |
 | 17 | [文字列・計算幾何・機械学習](series17/) | KMP、接尾辞配列、線分交差、凸包、最近点対、k 平均法、重みつき多数決、勾配降下法 | [サイト](https://r-shibusawa.github.io/p5-interactive-art/series17/) |
 | 18 | [NP完全性と近似アルゴリズム](series18/) | P と NP、還元、SAT、クリーク、頂点被覆、TSP、部分和、近似アルゴリズム、FPTAS | [サイト](https://r-shibusawa.github.io/p5-interactive-art/series18/) |
+| 19 | [モルフォロジー](series19/) | 膨張・収縮、オープニング・クロージング、細線化、距離変換、グレースケール、粒度分析、再構成、分水嶺 | [サイト](https://r-shibusawa.github.io/p5-interactive-art/series19/) |
+| 20 | [制御工学](series20/) | 開ループと閉ループ、一次・二次系、極と安定性、P・PI・PID、ボード線図、根軌跡、ナイキスト線図、状態空間、倒立振子、オブザーバー | [サイト](https://r-shibusawa.github.io/p5-interactive-art/series20/) |
+| 21 | [ロボティクス](series21/) | 順・逆運動学、ヤコビアン、差動二輪とオドメトリ、ポテンシャル法、A*、RRT、パーティクルフィルタ、カルマンフィルタ、ライントレース、群ロボット | [サイト](https://r-shibusawa.github.io/p5-interactive-art/series21/) |
 
 シリーズ 10〜18 は、ソートから NP 完全性まで代表的なアルゴリズムとデータ構造を幅広く扱います。参考：Cormen ほか『Introduction to Algorithms』
+シリーズ 19〜21 は画像処理（モルフォロジー）・制御工学・ロボティクスを扱います。
 
 各シリーズは 110 分の授業を想定した 16 本のスケッチと、進め方の説明（各フォルダの README）で構成されています。
 
