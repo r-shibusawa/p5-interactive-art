@@ -15,6 +15,17 @@
 | 7 | [音楽情報処理](series7/) | 音階、リズム、音色、ビート検出、クロマ、自動採譜、ルールで作曲 | [サイト](https://r-shibusawa.github.io/p5-interactive-art/series7/) |
 | 8 | [複雑ネットワーク](series8/) | グラフ探索、最短経路、スモールワールド、スケールフリー、感染、ページランク | [サイト](https://r-shibusawa.github.io/p5-interactive-art/series8/) |
 | 9 | [位相的データ解析](series9/) | 点群、リップス複体、ベッチ数、パーシステント・バーコード、Mapper | [サイト](https://r-shibusawa.github.io/p5-interactive-art/series9/) |
+| 10 | [ソートと計算量](series10/) | 挿入・マージ・ヒープ・クイックソート、分割統治、マスター定理、乱択、線形時間ソート、選択 | [サイト](https://r-shibusawa.github.io/p5-interactive-art/series10/) |
+| 11 | [基本データ構造](series11/) | スタック、キュー、連結リスト、ハッシュ表、二分探索木、赤黒木、順序統計木、区間木 | [サイト](https://r-shibusawa.github.io/p5-interactive-art/series11/) |
+| 12 | [動的計画法・貪欲法・償却解析](series12/) | ロッドカット、連鎖行列積、LCS、最適BST、活動選択、ハフマン、マトロイド、償却解析 | [サイト](https://r-shibusawa.github.io/p5-interactive-art/series12/) |
+| 13 | [高度なデータ構造](series13/) | B木、二項・フィボナッチヒープ、van Emde Boas 木、素集合データ構造 | [サイト](https://r-shibusawa.github.io/p5-interactive-art/series13/) |
+| 14 | [グラフアルゴリズム](series14/) | BFS、DFS、トポロジカルソート、強連結成分、最小全域木、ベルマン–フォード、ダイクストラ、全点対最短路 | [サイト](https://r-shibusawa.github.io/p5-interactive-art/series14/) |
+| 15 | [フロー・マッチング・並列・オンライン](series15/) | 最大フロー、2部マッチング、安定結婚、ハンガリー法、プッシュ再ラベル、並列アルゴリズム、オンラインアルゴリズム | [サイト](https://r-shibusawa.github.io/p5-interactive-art/series15/) |
+| 16 | [行列・線形計画・FFT・数論](series16/) | LUP 分解、最小二乗法、単体法、双対性、FFT、ユークリッド、中国剰余定理、RSA、素数判定 | [サイト](https://r-shibusawa.github.io/p5-interactive-art/series16/) |
+| 17 | [文字列・計算幾何・機械学習](series17/) | KMP、接尾辞配列、線分交差、凸包、最近点対、k 平均法、重みつき多数決、勾配降下法 | [サイト](https://r-shibusawa.github.io/p5-interactive-art/series17/) |
+| 18 | [NP完全性と近似アルゴリズム](series18/) | P と NP、還元、SAT、クリーク、頂点被覆、TSP、部分和、近似アルゴリズム、FPTAS | [サイト](https://r-shibusawa.github.io/p5-interactive-art/series18/) |
+
+シリーズ 10〜18 は、ソートから NP 完全性まで代表的なアルゴリズムとデータ構造を幅広く扱います。参考：Cormen ほか『Introduction to Algorithms』
 
 各シリーズは 110 分の授業を想定した 16 本のスケッチと、進め方の説明（各フォルダの README）で構成されています。
 

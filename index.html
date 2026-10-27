@@ -39,6 +39,10 @@
     .card:nth-child(8) .no, .card:nth-child(8) .go { color: var(--s8); }
     .card:nth-child(9) .no, .card:nth-child(9) .go { color: var(--s9); }
 
+    .algo .card .no, .algo .card .go { color: var(--c); }
+    .algo-head { padding: 72px 0 32px; border-bottom: 1px solid var(--line); }
+    .algo-head h2 { font-size: clamp(28px, 5vw, 44px); font-weight: 900; margin: 12px 0; line-height: 1.2; }
+    .algo-head p { color: var(--muted); margin: 0; max-width: 40em; }
     .card h2 { margin: 0; font-size: 32px; font-weight: 900; line-height: 1.2; }
     .card p { margin: 0; color: var(--muted); font-size: 15px; }
     .card ul { margin: 8px 0 0; padding: 0; list-style: none; color: var(--dim); font-size: 13px; font-family: var(--mono); display: grid; gap: 4px; }
@@ -120,6 +124,73 @@
         <h2>位相的データ解析</h2>
         <p>データの「形」を数える。点群から穴を見つけ、バーコードで記録する TDA。</p>
         <ul><li>00–09 点群、リップス複体、ベッチ数、バーコード、Mapper</li><li>10–13 バーコードを聞く、声の輪、点を置いて穴</li><li>14–15 トーラス、カメラで穴を数える</li></ul>
+        <span class="go">開く →</span>
+      </a>
+    </div>
+
+    <div class="algo-head"><span class="eyebrow">Algorithms &amp; Data Structures</span><h2>アルゴリズムとデータ構造</h2><p>ソートから NP 完全性まで、代表的なアルゴリズムとデータ構造を 9 シリーズで動かす。参考：Cormen ほか『Introduction to Algorithms』</p></div>
+    <div class="series algo">
+      <a class="card" href="series10/" style="--c:#6ee7ff">
+        <span class="no">SERIES 10</span>
+        <h2>ソートと計算量</h2>
+        <p>アルゴリズムの「速さ」を目と耳で。ソート、分割統治、乱択、ヒープ、選択問題。</p>
+        <ul><li>00–05 挿入・マージ、関数の増え方、分割統治、マスター定理</li><li>06–12 ヒープ、クイック、下界、線形時間ソート、選択</li><li>13–15 ソートを聞く、雇用問題、確率</li></ul>
+        <span class="go">開く →</span>
+      </a>
+      <a class="card" href="series11/" style="--c:#ff8fab">
+        <span class="no">SERIES 11</span>
+        <h2>基本データ構造</h2>
+        <p>しまい方で速さが変わる。スタック、リスト、ハッシュ表、二分探索木、赤黒木。</p>
+        <ul><li>スタック・キュー・連結リスト・根付き木</li><li>ハッシュ表（連鎖・開番地・ハッシュ関数）</li><li>二分探索木、赤黒木、順序統計木、区間木</li></ul>
+        <span class="go">開く →</span>
+      </a>
+      <a class="card" href="series12/" style="--c:#ffd166">
+        <span class="no">SERIES 12</span>
+        <h2>動的計画法・貪欲法・償却解析</h2>
+        <p>表を埋めて大きな答えへ。ロッドカット、LCS、ハフマン、償却解析。</p>
+        <ul><li>00–05 フィボナッチ、ロッドカット、連鎖行列積、LCS、編集距離、最適BST</li><li>06–09 活動選択、ナップサック、ハフマン、マトロイド</li><li>10–15 償却解析、動的配列、シームカービング、キャッシュ</li></ul>
+        <span class="go">開く →</span>
+      </a>
+      <a class="card" href="series13/" style="--c:#e879f9">
+        <span class="no">SERIES 13</span>
+        <h2>高度なデータ構造</h2>
+        <p>大量のデータを速く。B木、フィボナッチヒープ、van Emde Boas 木、素集合。</p>
+        <ul><li>00–02 B木の探索・挿入・削除</li><li>03–09 二項ヒープ、フィボナッチヒープ、vEB 木</li><li>10–15 素集合、迷路、しみこみ、オフライン最小値、LCA</li></ul>
+        <span class="go">開く →</span>
+      </a>
+      <a class="card" href="series14/" style="--c:#ff7a5c">
+        <span class="no">SERIES 14</span>
+        <h2>グラフアルゴリズム</h2>
+        <p>手順を 1 行ずつ。探索、最小全域木、最短経路。</p>
+        <ul><li>00–06 表現、BFS、DFS、トポロジカルソート、強連結成分、関節点、オイラー路</li><li>07–12 カット、クルスカル、プリム、ベルマン–フォード、DAG、ダイクストラ</li><li>13–15 グラフで奏でる、全点対最短路、ジョンソン</li></ul>
+        <span class="go">開く →</span>
+      </a>
+      <a class="card" href="series15/" style="--c:#4dd4c6">
+        <span class="no">SERIES 15</span>
+        <h2>フロー・マッチング・並列・オンライン</h2>
+        <p>最大フロー、マッチング、並列計算、未来を知らない決断。</p>
+        <ul><li>00–06 フロー、フォード＝ファルカーソン、最小カット、マッチング、安定結婚、ハンガリー法</li><li>07–10 フォーク・ジョイン、競合、並列行列積・マージ</li><li>11–15 スキーレンタル、MTF、キャッシング、水路デザイン、プッシュ再ラベル</li></ul>
+        <span class="go">開く →</span>
+      </a>
+      <a class="card" href="series16/" style="--c:#a3e635">
+        <span class="no">SERIES 16</span>
+        <h2>行列・線形計画・FFT・数論</h2>
+        <p>LUP 分解、単体法、FFT、ユークリッド、RSA、素数判定。</p>
+        <ul><li>行列：LUP 分解、逆行列、最小二乗法</li><li>線形計画：単体法、双対性</li><li>FFT・多項式、数論：最大公約数、中国剰余、RSA、ミラー–ラビン</li></ul>
+        <span class="go">開く →</span>
+      </a>
+      <a class="card" href="series17/" style="--c:#f0a3ff">
+        <span class="no">SERIES 17</span>
+        <h2>文字列・計算幾何・機械学習</h2>
+        <p>文字列照合、凸包、最近点対、k 平均法、勾配降下法。</p>
+        <ul><li>00–04 素朴法、ラビン–カープ、オートマトン、KMP、接尾辞配列</li><li>05–09 外積、掃引線、グレアム走査、ジャービス、最近点対</li><li>10–15 k 平均、重みつき多数決、勾配降下、凸包を聞く、多角形、回帰</li></ul>
+        <span class="go">開く →</span>
+      </a>
+      <a class="card" href="series18/" style="--c:#fca5a5">
+        <span class="no">SERIES 18</span>
+        <h2>NP完全性と近似アルゴリズム</h2>
+        <p>確かめるのは簡単、見つけるのは難しい。還元と、保証つきの近似。</p>
+        <ul><li>00–04 多項式 vs 指数、検証、回路充足、SAT、3-CNF</li><li>05–08 クリーク、頂点被覆、TSP、部分和</li><li>09–15 2倍近似、集合被覆、MAX-3-CNF、LP 丸め、FPTAS</li></ul>
         <span class="go">開く →</span>
       </a>
     </div>
