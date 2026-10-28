@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>シリーズ26 オリガミクス ─ p5.js コード集</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+JP:wght@400;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #000; --fg: #ededed; --muted: #8a8a8a; --dim: #555; --line: #1e1e1e; --panel: #0b0b0b;
+      --accent: #f28b82;
+      --sans: 'Inter', 'Noto Sans JP', system-ui, sans-serif;
+      --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--sans); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; }
+    .wrap { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+
+    header { padding: 96px 0 64px; border-bottom: 1px solid var(--line); }
+    .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase; }
+    .eyebrow b { color: var(--accent); font-weight: 600; }
+    h1 { font-size: clamp(36px, 7vw, 72px); line-height: 1.1; font-weight: 900; letter-spacing: -0.02em; margin: 20px 0 20px; }
+    .lead { color: var(--muted); margin: 0 0 36px; max-width: 34em; }
+    .actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; font: 600 14px var(--sans); text-decoration: none; border: 1px solid var(--fg); color: var(--fg); background: transparent; cursor: pointer; border-radius: 0; transition: background .15s, color .15s; }
+    .btn:hover { background: var(--fg); color: var(--bg); }
+    .btn.primary { background: var(--accent); border-color: var(--accent); color: #000; }
+    .btn.primary:hover { background: #fff; border-color: #fff; }
+    .btn.small { padding: 7px 14px; font-size: 13px; }
+
+    .howto { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--line); }
+    .howto div { padding: 28px 20px 28px 0; font-size: 14px; color: var(--muted); }
+    .howto div + div { padding-left: 20px; border-left: 1px solid var(--line); }
+    .howto span { display: block; font-family: var(--mono); color: var(--accent); font-size: 12px; margin-bottom: 8px; }
+    .howto b { color: var(--fg); font-weight: 700; }
+    @media (max-width: 720px) { .howto { grid-template-columns: 1fr 1fr; } .howto div:nth-child(3) { padding-left: 0; border-left: none; } }
+
+    .group { margin-top: 72px; }
+    .group-head { display: flex; align-items: baseline; gap: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--fg); }
+    .group-head .no { font-family: var(--mono); font-size: 12px; color: var(--accent); letter-spacing: 0.12em; }
+    .group-head h2 { margin: 0; font-size: 20px; font-weight: 800; }
+    .group-note { color: var(--muted); font-size: 14px; margin: 14px 0 0; }
+
+    details { border-bottom: 1px solid var(--line); }
+    summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 56px 1fr auto 20px; gap: 16px; align-items: center; padding: 20px 0; }
+    summary::-webkit-details-marker { display: none; }
+    summary:hover .title { color: var(--accent); }
+    .num { font-family: var(--mono); font-size: 14px; color: var(--dim); }
+    .title { font-weight: 700; font-size: 16px; transition: color .15s; }
+    .desc { display: block; color: var(--muted); font-size: 13px; font-weight: 400; }
+    .tags { display: flex; gap: 6px; }
+    .tag { font-family: var(--mono); font-size: 11px; color: var(--muted); border: 1px solid #333; padding: 1px 8px; letter-spacing: 0.06em; }
+    .chev { font-family: var(--mono); color: var(--dim); transition: transform .2s; }
+    details[open] .chev { transform: rotate(45deg); color: var(--accent); }
+    @media (max-width: 640px) { summary { grid-template-columns: 40px 1fr 16px; } .tags { display: none; } }
+
+    .body { padding: 0 0 24px 72px; }
+    @media (max-width: 640px) { .body { padding-left: 0; } }
+    .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+    pre { margin: 0; background: var(--panel); border: 1px solid var(--line); padding: 18px 20px; overflow: auto; max-height: 520px; font: 13px/1.6 var(--mono); color: #d8d8d8; }
+    .copied { background: var(--accent) !important; border-color: var(--accent) !important; color: #000 !important; }
+
+    footer { margin: 96px 0 0; padding: 32px 0 48px; border-top: 1px solid var(--line); color: var(--dim); font: 12px var(--mono); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="eyebrow"><a href="../" style="text-decoration:none;color:var(--muted)">← SERIES</a> &nbsp;/&nbsp; <b>SERIES 26</b> &nbsp;/&nbsp; Origamics — Mathematics of Folding</div>
+      <h1>オリガミクス<br>コード集</h1>
+      <p class="lead">1 枚の紙を折るだけで、角の三等分も ∛2 も作図できる。折り紙の公理、芳賀の定理、平らにたたむ条件（前川・川崎）、ミウラ折りや吉村パターン、ドラゴン曲線まで。「折る」を数学として自分の手で動かします。</p>
+      <div class="actions">
+        <a class="btn primary" href="https://editor.p5js.org/" target="_blank" rel="noopener">p5.js Web Editor を開く →</a>
+        <a class="btn" id="zip" href="#">ZIP でダウンロード</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="howto">
+      <div><span>01</span>番号を開いて<b>「コードをコピー」</b></div>
+      <div><span>02</span>エディタの <b>sketch.js</b> を全部消して貼り付け</div>
+      <div><span>03</span>左上の <b>▶</b> で実行</div>
+      <div><span>04</span>音のスケッチ（13・14）は<b>一番下の道具まで</b>コピーして、まずクリック</div>
+    </div>
+
+    <div id="list"></div>
+
+    <footer>p5.js Interactive Art Workshop — Series 26: Origamics — Mathematics of Folding — MIT License. 自由に改造して使ってください。</footer>
+  </div>
+
+  <script>
+    const REPO = 'r-shibusawa/p5-interactive-art';
+    document.getElementById('zip').href = `https://github.com/${REPO}/archive/refs/heads/main.zip`;
+
+    const GROUPS = [
+      { no: 'STEP 1', title: '折るとは何か', items: [
+        { id: '00_fold_line', title: '折り線と折り目', desc: '点を点に重ねると、折り線は垂直二等分線' },
+        { id: '01_huzita_axioms', title: '1 回折りでできること（藤田・羽鳥の公理）', desc: '折り方は 7 種類だけ。O6 は 3 次方程式' },
+      ]},
+      { no: 'STEP 2', title: '折り紙で解く作図問題', items: [
+        { id: '02_angle_trisection', title: '角の三等分', desc: '定規とコンパスでは不可能。折り紙ならできる' },
+        { id: '03_cube_root_two', title: '立方根 2 の作図', desc: '体積 2 倍の立方体。メッサーの方法' },
+        { id: '04_haga_theorem', title: '芳賀の定理（オリガミクス）', desc: '1 回折るだけで辺を 2/3、1/3 … に分ける' },
+      ]},
+      { no: 'STEP 3', title: 'かたちを折る・平らにたたむ条件', items: [
+        { id: '05_regular_polygons', title: '正多角形を折る', desc: '正三角形・正六角形・正五角形（黄金比）' },
+        { id: '06_maekawa', title: '平坦折りの条件：前川の定理', desc: '山の数 − 谷の数 = ±2' },
+        { id: '07_kawasaki', title: '川崎の定理', desc: '1 つおきの角の和が 180°' },
+      ]},
+      { no: 'STEP 4', title: '立体の折り ─ 工学へ', items: [
+        { id: '08_single_vertex_3d', title: '一頂点の平坦折りシミュレーション', desc: '4 枚の板を剛体のまま折る。自由度 1', tags: ['3D'] },
+        { id: '09_miura_ori', title: 'ミウラ折り', desc: '1 か所引くだけで全体が開く。宇宙の太陽電池パネル', tags: ['3D'] },
+        { id: '10_yoshimura', title: '吉村パターンと円筒の座屈', desc: '空き缶のつぶれ方。ダイヤ模様とクレスリング', tags: ['3D'] },
+      ]},
+      { no: 'STEP 5', title: '数・曲線・自由制作', items: [
+        { id: '11_fold_count', title: '折り紙で数を数える：紙を何回折れる？', desc: '厚さは 2 倍ずつ。必要な長さの式' },
+        { id: '12_dragon_curve', title: 'ドラゴン曲線', desc: '折って広げて 90° にすると現れる竜' },
+        { id: '13_fold_sound', title: '折りの音', desc: '紙折り数列をメロディとリズムに', tags: ['SOUND'] },
+        { id: '14_crease_brush', title: '折り紙パターン・ブラシ', desc: '対称に描いて敷きつめる。自由制作のベース', tags: ['SOUND'] },
+      ]},
+      { no: 'EXTRA', title: '発展編', items: [
+        { id: '15_webcam_fold', title: 'カメラで折る', desc: 'カメラの映像を紙にして、線を引いて折る', tags: ['CAMERA'] },
+      ]},
+    ];
+
+    const list = document.getElementById('list');
+    for (const g of GROUPS) {
+      const sec = document.createElement('section');
+      sec.className = 'group';
+      sec.innerHTML = `<div class="group-head"><span class="no">${g.no}</span><h2>${g.title}</h2></div>` +
+        (g.note ? `<p class="group-note">${g.note}</p>` : '');
+      for (const s of g.items) sec.appendChild(makeItem(s));
+      list.appendChild(sec);
+    }
+
+    function makeItem(s) {
+      const path = `sketches/${s.id}/sketch.js`;
+      const d = document.createElement('details');
+      d.innerHTML = `
+        <summary>
+          <span class="num">${s.id.slice(0, 2)}</span>
+          <span><span class="title">${s.title}</span><span class="desc">${s.desc}</span></span>
+          <span class="tags">${(s.tags || []).map(t => `<span class="tag">${t}</span>`).join('')}</span>
+          <span class="chev">+</span>
+        </summary>
+        <div class="body">
+          <div class="toolbar">
+            <button class="btn small primary copy">コードをコピー</button>
+            <a class="btn small" href="sketches/${s.id}/index.html" target="_blank" rel="noopener">動かしてみる ↗</a>
+            <a class="btn small" href="https://github.com/${REPO}/blob/main/series26/${path}" target="_blank" rel="noopener">GitHub</a>
+          </div>
+          <pre><code>読み込み中…</code></pre>
+        </div>`;
+      const code = d.querySelector('code');
+      const btn = d.querySelector('.copy');
+      let text = '';
+      fetch(path)
+        .then(r => r.text())
+        .then(t => { text = t; code.textContent = t; })
+        .catch(() => { code.textContent = '読み込みに失敗しました。「GitHub」から開いてください。'; });
+      btn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch (e) {
+          const ta = document.createElement('textarea');
+          ta.value = text; document.body.appendChild(ta); ta.select();
+          document.execCommand('copy'); ta.remove();
+        }
+        btn.textContent = 'コピーしました';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'コードをコピー'; btn.classList.remove('copied'); }, 1500);
+      });
+      return d;
+    }
+  </script>
+</body>
+</html>
