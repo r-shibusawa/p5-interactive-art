@@ -86,7 +86,7 @@ function draw() {
     for (let i = 2; i <= 16; i++) f.push(f[i - 1] + f[i - 2]);
     msg = '浅い対角線 ' + (d - 1) + '：和 = ' + sum + '　フィボナッチ：' + f.slice(0, 10).join(', ') + ' …';
   } else if (hl === 3) {
-    let r = fibIdx + 1;
+    let r = Math.min(fibIdx + 1, rows - 1);   // 行が足りないときは最後の行にとどめる
     stroke(300, 70, 100);
     let sum = 0;
     for (let k = 0; k <= r; k++) { let p = cellPos(r, k); circle(p.x, p.y, p.s); sum += realVals[r][k]; }

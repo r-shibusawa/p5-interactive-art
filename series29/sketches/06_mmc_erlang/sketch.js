@@ -72,8 +72,9 @@ function draw() {
     if (S.desk[i] >= 0) { fill(140, 70, 95); circle(dx - 14, y + dh / 2 - 3, min(18, dh - 10)); }
   }
   let qy = top + (c * dh) / 2;
-  for (let i = 0; i < min(S.q.length, 40); i++) { fill(30, 75, 100); circle(dx - 44 - i * 14, qy, 11); }
-  if (S.q.length > 40) { fill(0, 80, 100); textSize(13); text('+' + (S.q.length - 40), 30, qy + 24); }
+  let maxDots = min(40, floor((dx - 54) / 14));   // 画面の左に収まる点の数
+  for (let i = 0; i < min(S.q.length, maxDots); i++) { fill(30, 75, 100); circle(dx - 44 - i * 14, qy, 11); }
+  if (S.q.length > maxDots) { fill(0, 80, 100); textSize(13); text('+' + (S.q.length - maxDots), 30, qy + 24); }
   if (capK() < Infinity) { stroke(0, 70, 100); strokeWeight(2); let kx = dx - 44 - (capK() - c) * 14 + 7; line(kx, qy - 16, kx, qy + 16); noStroke(); fill(0, 70, 100); textSize(12); text('定員', kx - 12, qy - 20); }
   for (let L of lost) { L.y += L.vy; L.vy += 0.15; L.x -= 2; fill(0, 80, 100, 70); circle(L.x, L.y, 10); }
   lost = lost.filter((L) => L.y < height);
@@ -126,7 +127,7 @@ function keyPressed() {
 
 // ---------- やってみよう ----------
 // 1. λ = 4 で c を 4 → 5 → 6 と増やす。窓口 1 つ増やすだけで待ち時間は何分の 1 になる？
-// 2. λ = 2, c = 2 と λ = 20, c = 20（どちらも ρ = 1 に近い 0.9 くらい）で待たされる確率を比べる（λ と c を一緒に変える）
+// 2. λ = 1.5, c = 2 と λ = 11.5, c = 15（どちらも ρ は 0.75 くらい）で待たされる確率を比べる（λ と c を一緒に変える）
 // 3. K を押して定員 c（アーラン B）に。コールセンターの回線数を決めるとき、断られる確率 1% にするには？（target = 0.01）
 // 4. 平方根の法則：必要な窓口 ≒ a + β√a。表の答えと a + √a を比べてみる（12 で使う）
 

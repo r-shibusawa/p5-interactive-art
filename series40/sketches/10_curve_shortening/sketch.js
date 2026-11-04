@@ -64,17 +64,19 @@ function draw() {
   closedShape(init);
   stroke(45, 70, 100, 35);
   for (let s of snaps) closedShape(s);
-  // 今の曲線（曲率で色：出っぱり = 赤、へこみ = 青）
+  // 今の曲線（曲率で色：出っぱり = 赤、へこみ = 青。どちら向きに描いた曲線でも同じになるよう、向きで符号をそろえる）
   if (!gone) {
-    let n = pts.length;
+    let n = pts.length, sa = 0;
+    for (let i = 0; i < n; i++) { let a = pts[i], b = pts[(i + 1) % n]; sa += a.x * b.y - b.x * a.y; }
+    let orient = sa >= 0 ? 1 : -1;
     strokeWeight(3.5);
     for (let i = 0; i < n; i++) {
       let a = pts[(i - 1 + n) % n], p = pts[i], b = pts[(i + 1) % n];
       let lx = a.x - 2 * p.x + b.x, ly = a.y - 2 * p.y + b.y;
       let tx = b.x - a.x, ty = b.y - a.y;
-      let k = (tx * ly - ty * lx);                         // 符号つき曲率（向きに対して左か右か）
+      let k = (tx * ly - ty * lx) * orient;                // 符号つき曲率（+ = 出っぱり、− = へこみ）
       let kk = k / (h * h * h) * 40;
-      stroke(kk > 0 ? 215 : 5, Math.min(100, Math.abs(kk) * 100), 100);
+      stroke(kk > 0 ? 5 : 215, Math.min(100, Math.abs(kk) * 100), 100);
       line(p.x, p.y, b.x, b.y);
     }
   }

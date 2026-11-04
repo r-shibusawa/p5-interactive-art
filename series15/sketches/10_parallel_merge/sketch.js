@@ -96,13 +96,14 @@ function draw() {
   }
   // 段ごとの数
   textAlign(LEFT, BASELINE); noStroke();
+  let baseY = yIn + 85; // 入力の数字と出力の棒のあいだに置く（出力の棒は高さ 160 以下なので重ならない）
   for (let d = 0; d <= maxDepth; d++) {
     let k = calls.filter((c) => c.depth === d).length;
     fill(d <= level ? color((d * 45) % 360, 60, 90) : color(0, 0, 30));
-    rect(x0 + d * 46, yOut + 40, 40, -min(60, k * 3));
-    fill(0, 0, 70); textSize(12); text(k, x0 + d * 46 + 10, yOut + 56);
+    rect(x0 + d * 46, baseY, 40, -min(60, k * 3));
+    fill(0, 0, 70); textSize(12); text(k, x0 + d * 46 + 10, baseY + 14);
   }
-  fill(0, 0, 70); textSize(13); text('段ごとに同時に決まる要素の数', x0, yOut + 76);
+  fill(0, 0, 70); textSize(13); text('← 段ごとに同時に決まる要素の数', x0 + (maxDepth + 1) * 46 + 10, baseY);
   fill(0, 0, 100); textSize(18);
   text('スペース：1 段進む　A：自動　上下：要素数 n = ' + n + '　R：新しい数', 20, 36);
   textSize(15); fill(0, 0, 65);

@@ -39,7 +39,7 @@ function twoOptStep() {
   let n = tour.length;
   if (n < 4) return false; // 都市が少なすぎる
   for (let tries = 0; tries < 200; tries++) {
-    let i = floor(random(n - 1)), j = floor(random(i + 2, n));
+    let i = floor(random(n - 2)), j = floor(random(i + 2, n)); // i は n − 3 まで（最後から 2 番目だと j が配列の外に出る）
     if (i === 0 && j === n - 1) continue;
     let a = cities[tour[i]], b = cities[tour[i + 1]], c = cities[tour[j]], d = cities[tour[(j + 1) % n]];
     let before = dist(a.x, a.y, b.x, b.y) + dist(c.x, c.y, d.x, d.y);

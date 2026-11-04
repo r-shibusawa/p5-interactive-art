@@ -44,10 +44,10 @@ function draw() {
   // 作図（手順ごとに描く。今の手順はアニメーション）
   let f = (k) => (k < stage ? 1 : k === stage ? prog : 0);
   strokeWeight(2);
-  if (f(1) > 0) { stroke(45, 70, 100, 70); grow(P, A, f(1), 2.2); grow(P, B, f(1), 2.2); }
-  if (f(2) > 0 && R) { stroke(140, 60, 95, 80); grow(Q, C, f(2), 1.6); }
-  if (f(3) > 0 && R && S) { stroke(15, 75, 100, 80); grow(A, R, f(3), 1.5); grow(B, Q, f(3), 1.6); }
-  if (f(4) > 0 && S) { stroke(300, 50, 100, 90); let D = toXY(Dh); if (D) grow(P, S, f(4), (D.y - P.y) / (S.y - P.y || 1)); else grow(P, S, f(4), 3); }
+  if (f(1) > 0) { stroke(45, 70, 100, 70); grow(P, A, f(1), 2.2); growTo(P, B, f(1), R, 2.2); }
+  if (f(2) > 0 && R) { stroke(140, 60, 95, 80); growTo(Q, C, f(2), R, 1.6); }
+  if (f(3) > 0 && R && S) { stroke(15, 75, 100, 80); growTo(A, R, f(3), S, 1.5); growTo(B, Q, f(3), S, 1.6); }
+  if (f(4) > 0 && S) { stroke(300, 50, 100, 90); let D = toXY(Dh); if (D) growTo(P, S, f(4), D, 1); else grow(P, S, f(4), 3); }
   // 点
   noStroke(); textSize(16);
   for (let [p, nm, col] of [[A, 'A', 200], [B, 'B', 200], [C, 'C', 45]]) { fill(col, 60, 100); circle(p.x, p.y, 14); fill(0, 0, 100); text(nm, p.x - 5, p.y + 26); }
@@ -83,6 +83,12 @@ function draw() {
 
 // a から b の方向へ、長さ k 倍まで、進み f で線を伸ばす
 function grow(a, b, f, k) { line(a.x, a.y, a.x + (b.x - a.x) * k * f, a.y + (b.y - a.y) * k * f); }
+// a → b の直線を、点 pt を通りこすまで伸ばす（pt が a の後ろ側なら後ろへも。k は前へ伸ばす最低の長さ）
+function growTo(a, b, f, pt, k) {
+  let dx = b.x - a.x, dy = b.y - a.y, t = pt ? ((pt.x - a.x) * dx + (pt.y - a.y) * dy) / (dx * dx + dy * dy || 1) : 0;
+  let t0 = min(0, t * 1.08) * f, t1 = max(k, t * 1.08) * f;
+  line(a.x + dx * t0, a.y + dy * t0, a.x + dx * t1, a.y + dy * t1);
+}
 
 function mousePressed() {
   handles = [{ x: xa, y: yL }, { x: xb, y: yL }, { x: xc, y: yL }, P, Qpt()];

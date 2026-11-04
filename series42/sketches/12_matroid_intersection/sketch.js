@@ -57,7 +57,7 @@ function findPath() {
       let u = queue.shift();
       for (let i = 0; i < edges.length; i++) {
         let e = edges[i];
-        if (e.a !== u || e.on || seenR[e.b]) continue;
+        if (e.a !== u || e.on || seenR[e.b] !== undefined) continue;   // 辺番号 0 も到達済みとして扱う
         seenR[e.b] = i;
         if (matchR[e.b] === undefined) {           // 未使用の右頂点に着いた：道を復元
           let out = [i], v = u;

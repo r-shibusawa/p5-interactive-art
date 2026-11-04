@@ -62,11 +62,11 @@ function finishRun() {
 
 function draw() {
   background(280, 20, 12);
+  if (sim.t >= runT) finishRun();     // 次の待ち行列へ（描く前の rec が空にならないよう、ここで切り替える）
   let target = min(runT, sim.t + speed / 60);
   advance(target);
   sim.rec.push({ t: sim.t, n: nIn() });
   while (sim.rec.length && sim.rec[0].t < sim.t - showSpan) sim.rec.shift();
-  if (sim.t >= runT) finishRun();
 
   // ---- 左上：N(t)
   let gx = 40, gw = width * 0.55, gy = height * 0.42, gh = height * 0.24;

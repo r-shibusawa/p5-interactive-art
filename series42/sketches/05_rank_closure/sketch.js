@@ -31,7 +31,7 @@ function randomPoints() {
     pts.push({ gx, gy, inA: false, inB: false });
   }
   // 最初の 3 点を同じ直線に乗せておく
-  if (pts.length >= 3) { pts[1].gx = pts[0].gx + 1; pts[1].gy = pts[0].gy; pts[2].gx = pts[0].gx + 3; pts[2].gy = pts[0].gy; }
+  if (pts.length >= 3) { pts[0].gx = max(0, min(pts[0].gx, cols() - 4)); pts[1].gx = pts[0].gx + 1; pts[1].gy = pts[0].gy; pts[2].gx = pts[0].gx + 3; pts[2].gy = pts[0].gy; }
 }
 
 // ★ 階数：点 (gx, gy) を (gx, gy, 1) というベクトルとみなして、その階数

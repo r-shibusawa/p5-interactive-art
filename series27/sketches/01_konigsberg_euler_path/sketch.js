@@ -162,7 +162,7 @@ function mouseReleased() {
 function keyPressed() {
   if (key === 'k' || key === 'K') preset('K');
   if (key === '2' || key === '3' || key === '4') preset(key);
-  if (key === ' ') { animPath = eulerPath(); animT = 0; if (!animPath) result = '一筆書きの道は見つからない：' + result; }
+  if (key === ' ') { animPath = eulerPath(); animT = 0; if (!animPath) { analyze(); result = '一筆書きの道は見つからない：' + result; } }
   if ((key === 'd' || key === 'D') && edges.length) { edges.pop(); animPath = null; analyze(); }
   if (key === 'x' || key === 'X') {
     let v = vertexAt(mouseX, mouseY);

@@ -109,14 +109,14 @@ function draw() {
     fill(40, 200, 140); text('下 = ' + nf(lo, 1, 5), tx + 180, y + 20);
     fill(255); text('上 ÷ 下 = ' + nf(up / lo, 1, 6), tx, y + 54);
     fill(255, 190, 40); text('∛2    = ' + nf(Math.cbrt(2), 1, 6), tx, y + 84);
-    drawCubes(tx + 330, y + 90, 50, up / lo);
+    drawCubes(min(tx + 330, width - 250), y + 90, 50, up / lo);
   } else if (!sol) { fill(255, 120, 100); text('この h では紙の中で折れない', tx, y + 20); }
 }
 
 // 一辺 1 と 一辺 r の立方体を並べる（体積 1 と r³）
 function drawCubes(x, y, s, r) {
   for (let [k, len, c] of [[0, 1, color(40, 160, 110)], [1, r, color(60, 110, 220)]]) {
-    let L = s * len, cx = x + k * s * 2.6, d = L * 0.45;
+    let L = s * constrain(len, 0.2, 1.6), cx = x + k * s * 2.6, d = L * 0.45;   // はみ出さないよう描く大きさだけ制限（G で比が大きく変わる）
     stroke(255); strokeWeight(1.5); fill(red(c), green(c), blue(c), 160);
     quad(cx, y, cx + L, y, cx + L, y - L, cx, y - L);
     quad(cx, y - L, cx + L, y - L, cx + L + d, y - L - d, cx + d, y - L - d);

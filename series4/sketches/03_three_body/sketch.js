@@ -26,7 +26,7 @@ function reset() {
     let r = 160;
     bodies.push({
       pos: createVector(width / 2 + cos(a) * r, height / 2 + sin(a) * r),
-      vel: createVector(-sin(a), cos(a)).mult(1.4 + random(-0.05, 0.05)), // ★ ほんの少しランダム
+      vel: createVector(-sin(a), cos(a)).mult(0.45 + random(-0.05, 0.05)), // ★ ほんの少しランダム（速すぎると引力をふり切って飛び去る）
       mass: 60,
       hue: i * 120 + 20,
     });

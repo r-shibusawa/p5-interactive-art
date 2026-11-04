@@ -106,7 +106,7 @@ function draw() {
   fill(330, 70, 100); text('ピンクの道　S = ' + nf(S1, 1, 4) + '（差 ' + nf(S1 - S0, 1, 4) + '）', gx, ty + 28);
   fill(0, 0, 75); textSize(15);
   text('ε = 0 での傾き dS/dε = ' + nf(slope, 1, 5) + ' ≈ 0（停留）', gx, ty + 60);
-  text('曲がり方 d²S/dε² = ' + nf(curv, 1, 3) + (curv > 0 ? ' > 0 → 最小' : ' < 0 → 最大！（「最小」ではなく「停留」）'), gx, ty + 86);
+  text('曲がり方 d²S/dε² = ' + nf(curv, 1, 3) + (Math.abs(curv) < 1e-6 ? ' = 0 → ずらしていない（ピンク = 本物）' : curv > 0 ? ' > 0 → 最小' : ' < 0 → 最大！（「最小」ではなく「停留」）'), gx, ty + 86);
   if (mode === 2) text('ばね：T = ' + nf(T, 1, 2) + ' s、半周期 π/ω = ' + nf(PI / w0, 1, 2) + ' s' + (T > PI / w0 ? '　→ 半周期より長いと最小でなくなることがある' : ''), gx, ty + 112);
 
   noStroke(); fill(0, 0, 100); textSize(18);

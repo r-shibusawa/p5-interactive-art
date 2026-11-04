@@ -26,7 +26,9 @@ function build() {
   h = [];
   for (let i = 0; i <= n; i++) for (let j = 0; j <= n; j++) {
     let v = cx.vid[i][j]; if (h[v] !== undefined) continue;
-    let val = surfNo === 2 ? i + j : Math.cos(2 * Math.PI * i / n + phase) + 1.3 * Math.cos(2 * Math.PI * j / n + phase * 0.7);
+    // クラインの壺は (n, j) と (0, n − j) を貼るので、j の cos は位相をずらせない（ずらすと貼り目で高さが飛んで臨界胞体が増える）
+    let phaseJ = surfNo === 3 ? 0 : phase * 0.7;
+    let val = surfNo === 2 ? i + j : Math.cos(2 * Math.PI * i / n + phase) + 1.3 * Math.cos(2 * Math.PI * j / n + phaseJ);
     h[v] = val + 0.0001 * v;
   }
   pair = gradientFromHeight(cx, h);
@@ -89,7 +91,7 @@ function keyPressed() {
 // ---------- やってみよう ----------
 // 1. トーラスを 3D（T）で回して、2 つの鞍点（ライムの辺）がそれぞれ「穴をくぐる輪」「穴をまわる輪」をふさいでいるのを確かめよう
 // 2. 球面（2）の極大（コーラルの面）は右下の角にある。折りたたみの貼り方で角がどこに行くか指でたどろう
-// 3. N で高さ関数の位相を変えても m は変わらない（b_k が下限だから）。変わる高さ関数を作れる？（cos を 2 周期にすると？）
+// 3. N は位相をずらすだけで高さ関数の山と谷の数は同じなので、m は変わらない。b_k は下限なので m はこれより減らせないが、増やすことはできる（cos を 2 周期にすると？）
 // 4. クラインの壺（3）とトーラスは m も b（Z2）も同じ。違いはどこに出る？（辺の貼り方 → 向き付け）
 
 

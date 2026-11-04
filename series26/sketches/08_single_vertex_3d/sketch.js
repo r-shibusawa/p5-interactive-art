@@ -66,7 +66,7 @@ function draw() {
   background(30, 28, 36);
   if (keyIsDown(RIGHT_ARROW)) tryRho(rho + 0.012);
   if (keyIsDown(LEFT_ARROW)) tryRho(rho - 0.012);
-  if (auto) { if (!tryRho(rho + 0.01 * autoDir) || rho > PI - 0.03 || rho < 0.02) autoDir *= -1; }
+  if (auto) { if (!tryRho(rho + 0.01 * autoDir) || rho > PI - 0.03 || rho <= 0.02) autoDir *= -1; }
 
   setCamera(mainCam);
   orbitControl();

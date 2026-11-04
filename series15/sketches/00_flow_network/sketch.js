@@ -74,7 +74,11 @@ function balanceSuper() {
 
 function balance(i) {
   let inn = 0, out = 0;
-  for (let e of edges) { if (e.v === i) inn += e.f; if (e.u === i) out += e.f; }
+  for (let e of edges) {
+    if (e.sup) continue; // 超出発点・超到着点の線は数えない（数えると出発点の差し引きが 0 になる）
+    if (e.v === i) inn += e.f;
+    if (e.u === i) out += e.f;
+  }
   return { inn, out };
 }
 

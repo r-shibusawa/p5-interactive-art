@@ -38,7 +38,8 @@ function draw() {
   // カメラ（箱）
   fill(0, 0, 30); noStroke(); rect(tv.hx - v * tv.s * 2 - 10, tv.hy - 60, v * tv.s * 2 + 10, 120, 4);
   fill(0, 0, 100); rect(tv.hx - v * tv.s * 2 - 10, tv.hy - 44, 4, 88);          // センサー
-  fill(lensMode ? 190 : 45, 60, 100); rect(tv.hx - 2, tv.hy - 60, 4, 60 - D * 10); rect(tv.hx - 2, tv.hy + D * 10, 4, 60 - D * 10);
+  let gap = D * (lensMode ? 2 : 10);   // 穴の見た目の半径（レンズは D が 25 まであるので縮めて描く）
+  fill(lensMode ? 190 : 45, 60, 100); rect(tv.hx - 2, tv.hy - 60, 4, 60 - gap); rect(tv.hx - 2, tv.hy + gap, 4, 60 - gap);
   // 物体（遠い順）
   let sorted = [...objects].sort((a, b) => b.z - a.z);
   for (let o of sorted) {

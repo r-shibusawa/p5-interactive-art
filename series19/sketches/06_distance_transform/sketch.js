@@ -35,7 +35,8 @@ function distanceTransform(fg) {
   let out = new Float32Array(cols * rows);
   if (metric === 1) {
     let sq = edtSquared((i) => !fg[i]);
-    for (let i = 0; i < out.length; i++) out[i] = Math.sqrt(sq[i]);
+    // 背景が 1 マスもないと sq は 1e9 のまま。市街地／チェス盤と同じ「遠すぎる」値にする
+    for (let i = 0; i < out.length; i++) out[i] = sq[i] >= 1e8 ? 1e6 : Math.sqrt(sq[i]);
   } else {
     // 2 回の走査（前向き・後ろ向き）で市街地／チェス盤の距離が正確に求まる
     let BIG = 1e6;

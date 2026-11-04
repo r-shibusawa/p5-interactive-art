@@ -69,7 +69,7 @@ function layout(e, env, x0, x1, y0, y1, D, row, invertIn, leftX) {
     return { x: x0 + 12, y, v };
   }
   let kids = e.slice(1).map((s) => layout(s, env, x0, x1, y0, y1, D, row, invertIn, leftX));
-  let gx = x0 + 60 + (D - depthOf(e) + 1) * ((x1 - x0 - 60) / D) - 30;
+  let gx = x0 + 60 + depthOf(e) * ((x1 - x0 - 60) / D) - 30;   // 深さ 1 が入力のすぐ右、いちばん深い式（出力）が右端
   let gy = kids.reduce((s, k) => s + k.y, 0) / kids.length;
   let v = evalE(e, env);
   // 配線

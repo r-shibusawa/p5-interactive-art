@@ -50,7 +50,7 @@ function draw() {
   background(30, 28, 36);
   if (keyIsDown(RIGHT_ARROW)) { fold = min(HALF_PI - 0.02, fold + 0.01); auto = false; }
   if (keyIsDown(LEFT_ARROW)) { fold = max(0, fold - 0.01); auto = false; }
-  if (auto) { fold += 0.006 * autoDir; if (fold > HALF_PI - 0.05 || fold < 0.02) autoDir *= -1; }
+  if (auto) { fold += 0.006 * autoDir; if (fold > HALF_PI - 0.05) autoDir = -1; else if (fold < 0.02) autoDir = 1; }   // 向きを決めうちにする（端の外から始めても震えない）
 
   setCamera(mainCam);
   orbitControl();

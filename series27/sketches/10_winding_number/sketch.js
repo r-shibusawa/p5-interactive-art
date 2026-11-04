@@ -81,9 +81,11 @@ function draw() {
 }
 
 function axes(c, L, title) {
+  // 画面の外や説明文の下に入らないように、軸の長さと見出しの位置を止める
+  let top = max(90, c.y - L), bottom = min(height - 90, c.y + L), left = max(0, c.x - L), right = min(width, c.x + L);
   stroke(0, 0, 40); strokeWeight(1);
-  line(c.x - L, c.y, c.x + L, c.y); line(c.x, c.y - L, c.x, c.y + L);
-  noStroke(); fill(0, 0, 60); textSize(16); text(title, c.x - L, c.y - L + 4);
+  line(left, c.y, right, c.y); line(c.x, top, c.x, bottom);
+  noStroke(); fill(0, 0, 60); textSize(16); text(title, max(20, c.x - L), top + 14);
 }
 
 function mousePressed() {

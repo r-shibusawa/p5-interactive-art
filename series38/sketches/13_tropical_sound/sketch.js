@@ -60,7 +60,7 @@ function draw() {
     flash[ev.i] = 1;
     played.push(ev);
   }
-  played = played.filter((h) => h.t > now - 12);
+  played = played.filter((h) => h.t > now - 8);
 
   // グラフ
   for (let [j, i] of arcs) {
@@ -79,20 +79,21 @@ function draw() {
     noStroke(); fill(0, 0, 10); textAlign(CENTER, CENTER); textSize(16); text(i, nodes[i].x, nodes[i].y - 9); textSize(12); text('τ=' + nf(tau[i], 1, 2), nodes[i].x, nodes[i].y + 10); textAlign(LEFT, BASELINE);
   }
 
-  // 流れるダイヤ：右 = いま
+  // 流れるダイヤ：緑の線 = いま、左 = 過去 8 秒、右 = これから 4 秒の予定
   let tx = width * 0.5, tw = width - tx - 40, ty = 160, rowH = 50;
-  let sx = (t) => tx + tw - (now - t) / 12 * tw;
+  let nowX = tx + tw * 8 / 12;
+  let sx = (t) => nowX - (now - t) / 12 * tw;
   noStroke(); fill(0, 0, 100, 6); rect(tx - 10, ty - 30, tw + 20, rowH * n + 40, 12);
   for (let i = 0; i < n; i++) {
     let y = ty + i * rowH;
     stroke(0, 0, 100, 20); strokeWeight(1); line(tx, y, tx + tw, y);
     noStroke(); fill(0, 0, 60); textSize(13); text('工程 ' + i + '（' + notes[i] + ' Hz）', tx, y - 16);
     for (let h of played) if (h.i === i) { fill((i * 80 + 20) % 360, 70, 100, 80); rect(sx(h.t), y - 12, Math.max(2, tau[i] / 12 * tw), 24, 3); }
-    for (let p of pending) if (p.i === i && p.t < now + 12) { noFill(); stroke((i * 80 + 20) % 360, 70, 100, 50); rect(sx(p.t), y - 12, Math.max(2, tau[i] / 12 * tw), 24, 3); noStroke(); }
+    for (let p of pending) if (p.i === i && p.t + tau[i] < now + 4) { noFill(); stroke((i * 80 + 20) % 360, 70, 100, 50); rect(sx(p.t), y - 12, Math.max(2, tau[i] / 12 * tw), 24, 3); noStroke(); }
   }
-  stroke(90, 90, 100); strokeWeight(2); line(tx + tw, ty - 30, tx + tw, ty + rowH * n + 10);
+  stroke(90, 90, 100); strokeWeight(2); line(nowX, ty - 30, nowX, ty + rowH * n + 10);
   // 周期の目盛り
-  for (let m = 0; m < 12 / Math.max(lam, 0.1); m++) { stroke(330, 70, 100, 40); strokeWeight(1); line(tx + tw - m * lam / 12 * tw, ty + rowH * n + 10, tx + tw - m * lam / 12 * tw, ty + rowH * n + 20); }
+  for (let m = 0; m < 8 / Math.max(lam, 0.1); m++) { stroke(330, 70, 100, 40); strokeWeight(1); line(nowX - m * lam / 12 * tw, ty + rowH * n + 10, nowX - m * lam / 12 * tw, ty + rowH * n + 20); }
   noStroke(); fill(330, 70, 100); textSize(15); text('ピンクの目盛り = 周期 λ = ' + nf(lam, 1, 3) + ' 秒（最大平均サイクル重み）', tx, ty + rowH * n + 44);
 
   fill(0, 0, 100); textSize(18);

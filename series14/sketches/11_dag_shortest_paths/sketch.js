@@ -100,6 +100,13 @@ function criticalSet() {
   return set;
 }
 
+// 線の曲がり具合（離れた点を結ぶ線は曲げる）。描くときとクリックの判定で同じ値を使う
+function edgeBend(e, k) {
+  let span = abs(G.nodes[e.v].x - G.nodes[e.u].x) / max(1, (width - 180) / max(1, G.nodes.length - 1));
+  let side = k % 2 === 0 ? -1 : 1;
+  return span > 1.2 ? side * min(60, span * 20) : 0;
+}
+
 function draw() {
   background(C.bg);
   autoRun();
@@ -110,9 +117,7 @@ function draw() {
   let crit = criticalSet();
   let n = G.nodes.length;
   G.edges.forEach((e, k) => {
-    let span = abs(G.nodes[e.v].x - G.nodes[e.u].x) / max(1, (width - 180) / max(1, n - 1));
-    let side = k % 2 === 0 ? -1 : 1;
-    let bend = span > 1.2 ? side * min(60, span * 20) : 0;
+    let bend = edgeBend(e, k);
     let col = C.edge, w = 2;
     if (pi[e.v] === e.u) { col = longest ? C.orange : C.accent; w = 4; }
     if (crit.has(e)) { col = C.accent; w = 7; }
@@ -140,7 +145,7 @@ function draw() {
 }
 
 function mousePressed() {
-  if (weightClick(G, -5, 9)) { resetRun(); return; }
+  if (weightClick(G, -5, 9, (e) => edgeBend(e, G.edges.indexOf(e)))) { resetRun(); return; }
   let i = nodeAt(G.nodes, mouseX, mouseY, 30);
   if (i >= 0) { src = i; resetRun(); }
 }
@@ -351,9 +356,9 @@ function editRubber(G) {
   }
 }
 // 線の数字（重み）をクリック → 重みを 1 つ増やす（Shift で減らす）。範囲 lo〜hi で一周
-function weightClick(G, lo = 1, hi = 9) {
+function weightClick(G, lo = 1, hi = 9, bendOf = (e) => (hasReverse(G, e) ? 14 : 0)) {
   for (let e of G.edges) {
-    if (edgeLabelAt(G.nodes[e.u], G.nodes[e.v], hasReverse(G, e) ? 14 : 0, mouseX, mouseY)) {
+    if (edgeLabelAt(G.nodes[e.u], G.nodes[e.v], bendOf(e), mouseX, mouseY)) {
       let d = keyIsDown(SHIFT) ? -1 : 1;
       e.w += d;
       if (e.w > hi) e.w = lo;

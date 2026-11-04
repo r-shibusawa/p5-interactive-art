@@ -10,6 +10,7 @@ let hx = 1.4, hy = 0.9, hw = 1;   // ★ 同次座標 [x, y, w]
 let showMult = true;
 let U;                            // 1 単位 = U px
 let trail = [];
+let holdT = 0;                    // ←→ を押し続けているフレーム数
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -26,6 +27,9 @@ function panels() {
 function draw() {
   background(30, 35, 11);
   let [L, M, Rp] = panels();
+  // ←→ は押し続けると少しずつ w が動く（keyPressed は押し続けても 1 回しか呼ばれない）
+  holdT = keyIsDown(LEFT_ARROW) || keyIsDown(RIGHT_ARROW) ? holdT + 1 : 0;
+  if (holdT >= 20 && holdT % 2 === 0) hw = keyIsDown(LEFT_ARROW) ? max(-2, hw - 0.04) : min(2, hw + 0.04);
   if (mouseIsPressed && mouseX < L[2] && mouseY > L[1]) {
     let c = center(L);
     hx = constrain((mouseX - c.x) / U, -6, 6); hy = constrain((c.y - mouseY) / U, -6, 6);
@@ -49,8 +53,10 @@ function draw() {
 function drawPlane(b, px) {
   let c = center(b);
   frame(b, '平面（w = 1 の断面）');
+  clipTo(b);
   stroke(0, 0, 100, 15); strokeWeight(1);
   for (let i = -20; i <= 20; i++) { line(c.x + i * U, b[1], c.x + i * U, b[3]); line(b[0], c.y + i * U, b[2], c.y + i * U); }
+  drawingContext.restore();
   stroke(0, 0, 100, 40); line(c.x, b[1], c.x, b[3]); line(b[0], c.y, b[2], c.y);
   // 軌跡
   noFill(); stroke(200, 60, 95, 40); strokeWeight(2);
@@ -86,8 +92,10 @@ function drawSection(b) {
   fill(0, 0, 70); text('w = 0', c.x + 8, c.y + 18); text('x', b[2] - 20, c.y - 8); text('w', c.x + 8, b[1] + 20);
   // 原点を通る直線（方向 (x, w)）
   let dx = hx, dw = hw, m = Math.hypot(dx, dw) || 1; dx /= m; dw /= m;
+  clipTo(b);
   stroke(45, 80, 100, 70); strokeWeight(2);
   line(c.x - dx * 2000, c.y + dw * 2000, c.x + dx * 2000, c.y - dw * 2000);
+  drawingContext.restore();
   stroke(45, 80, 100); strokeWeight(4); line(c.x, c.y, c.x + hx * U, c.y - hw * U);
   noStroke(); fill(45, 80, 100); circle(c.x + hx * U, c.y - hw * U, 10);
   textSize(13); text('(x, w)', c.x + hx * U + 8, c.y - hw * U - 6);
@@ -128,6 +136,8 @@ function center(b) { return { x: (b[0] + b[2]) / 2, y: (b[1] + b[3]) / 2 }; }
 function toPlane(x, y, w) { return Math.abs(w) < 1e-6 ? null : { x: x / w, y: y / w }; }
 function toScreen(p, c) { return { x: c.x + p.x * U, y: c.y - p.y * U }; }
 function inside(s, b) { return s.x > b[0] && s.x < b[2] && s.y > b[1] && s.y < b[3]; }
+// これから描く線を枠 b の中だけに切り抜く（描いたら drawingContext.restore() で戻す）
+function clipTo(b) { drawingContext.save(); drawingContext.beginPath(); drawingContext.rect(b[0], b[1], b[2] - b[0], b[3] - b[1]); drawingContext.clip(); }
 function frame(b, title) {
   noFill(); stroke(0, 0, 100, 30); strokeWeight(1); rect(b[0], b[1], b[2] - b[0], b[3] - b[1]);
   noStroke(); fill(45, 80, 100); textSize(15); text(title, b[0] + 12, b[1] - 10);

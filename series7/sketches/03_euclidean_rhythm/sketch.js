@@ -11,6 +11,7 @@ let pos = 0;
 let nextTime = 0;
 let playing = false;
 let bpm = 100;
+let mouseK = -1, mouseN = -1; // マウスの位置から求めた k, n の前回の値
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -40,7 +41,9 @@ function draw() {
   if (!mouseIsPressed) {
     let nk = floor(map(mouseX, 0, width, 1, 13, true));
     let nn = floor(map(mouseY, 0, height, 16, 4, true));
-    if (nk !== k || nn !== n) {
+    if (nk !== mouseK || nn !== mouseN) { // マウスが動いて値が変わったときだけ（1〜4 のお手本を消さないため）
+      mouseK = nk;
+      mouseN = nn;
       n = nn;
       k = min(nk, n);
     }

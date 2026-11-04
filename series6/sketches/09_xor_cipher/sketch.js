@@ -17,7 +17,7 @@ function setup() {
   // 元の絵：ハート
   for (let y = 0; y < h; y++) {
     for (let x = 0; x < w; x++) {
-      let nx = (x - w / 2) / 14, ny = (y - h / 2 + 4) / 14;
+      let nx = (x - w / 2) / 14, ny = (h / 2 + 2 - y) / 14; // 画面の y は下向きなので、符号を逆にして上下を合わせる
       let heart = pow(nx * nx + ny * ny - 1, 3) - nx * nx * ny * ny * ny < 0;
       plain.push(heart ? 1 : 0);
     }

@@ -19,6 +19,8 @@ function setup() {
   nextArr = expRand(rho * mu);
 }
 
+function maxDots() { return min(60, floor((width * 0.3 - 10) / 14) + 1); }   // 画面の左に収まる点の数
+
 function advance(tEnd) {
   while (min(nextArr, nextDep) <= tEnd) {
     if (nextArr <= nextDep) {
@@ -26,7 +28,7 @@ function advance(tEnd) {
       if (n === 1) nextDep = t + expRand(mu);
       nextArr = t + expRand(rho * mu);
       clickSound(0.25);                                         // ★ 到着の音
-      rings.push({ x: width * 0.3 - min(n, 60) * 14, y: height * 0.35, r: 6, hue: 30 });
+      rings.push({ x: width * 0.3 - min(n, maxDots()) * 14, y: height * 0.35, r: 6, hue: 30 });
     } else {
       t = nextDep; n--;
       nextDep = n > 0 ? t + expRand(mu) : Infinity;
@@ -50,7 +52,8 @@ function draw() {
   let qx = width * 0.3, qy = height * 0.35;
   noStroke(); fill(200, 50, n > 0 ? 80 : 30); rect(qx + 20, qy - 30, 50, 60, 8);
   if (n > 0) { fill(140, 70, 95); circle(qx + 40, qy, 22); }
-  for (let i = 1; i < min(n, 60); i++) { fill(30, 70, 100); circle(qx - i * 14, qy, 11); }
+  for (let i = 1; i < min(n, maxDots()); i++) { fill(30, 70, 100); circle(qx - i * 14, qy, 11); }
+  if (n > maxDots()) { fill(0, 80, 100); textSize(13); text('+' + (n - maxDots()), 6, qy - 14); }
   // 音の波紋
   noFill();
   for (let r of rings) { stroke(r.hue, 70, 100, 100 - r.r); strokeWeight(2); circle(r.x, r.y, r.r); r.r += 3; }

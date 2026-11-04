@@ -63,7 +63,7 @@ function draw() {
     beginShape();
     for (let x = left; x <= right; x += 2) {
       let t = ((x - left) / (right - left)) * secondsOnScreen;
-      vertex(x, mid - sgn * abs(cos(PI * (f2 - f1) * t + phase / 2)) * h);
+      vertex(x, mid - sgn * abs(cos(PI * (f2 - f1) * t)) * h);
     }
     endShape();
   }

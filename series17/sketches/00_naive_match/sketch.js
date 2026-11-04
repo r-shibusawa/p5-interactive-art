@@ -37,6 +37,11 @@ function restart() {
 function compareOnce() {
   if (finished) return;
   let n = T.length, m = P.length;
+  // 前の回が不一致なら、ここで 1 つずらしてやり直す（赤いマスを 1 回ぶん見せてから動かす）
+  if (last && !last.ok) {
+    s++; j = 0; last = null;
+    if (s > n - m) { finished = true; return; }
+  }
   comps++;
   perShift[s] = (perShift[s] || 0) + 1;
   let ok = T[s + j] === P[j];
@@ -44,8 +49,6 @@ function compareOnce() {
   if (ok) {
     j++;
     if (j === m) { found.push(s); s++; j = 0; }   // 全部一致 → 見つけた！次のずらしへ
-  } else {
-    s++; j = 0;                                   // 1 文字でも違えば、1 つずらしてやり直し
   }
   if (s > n - m) finished = true;
 }

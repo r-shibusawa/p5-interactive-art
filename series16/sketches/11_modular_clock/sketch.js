@@ -55,7 +55,6 @@ function draw() {
   if (mode === 3) {
     let d = gcd(a, n);
     for (let x = 0; x < n; x++) { let [x1, y1] = P(x), [x2, y2] = P((a * x) % n); let on = (a * x) % n === b % n; stroke(on ? color(45, 90, 100) : color(0, 0, 50, 40)); strokeWeight(on ? 3 : 1); line(x1, y1, lerp(x1, x2, 0.97), lerp(y1, y2, 0.97)); if (on) hl.add(x); }
-    let [bx, by] = P(b); noFill(); stroke(150, 70, 95); strokeWeight(4); circle(bx, by, 40);
     msgs.push(`${a}x ≡ ${b} (mod ${n}) を解く。x → ${a}x mod ${n} の矢印のうち、${b}（緑の輪）に届くものが解`);
     msgs.push(`d = gcd(${a}, ${n}) = ${d}`);
     if (b % d === 0) {
@@ -70,6 +69,8 @@ function draw() {
     noStroke(); fill(on ? color((k * 360) / n, 70, 95) : unit.has(k) ? color(0, 0, 45) : color(0, 0, 22)); circle(x, y, r * 2);
     fill(on ? color(0, 0, 8) : color(0, 0, 90)); textAlign(CENTER, CENTER); textSize(r * 0.9); text(k, x, y);
   }
+  // b の緑の輪：数字の丸に隠れないよう、丸より大きくして上に描く
+  if (mode === 3) { let [bx, by] = P(b); noFill(); stroke(150, 70, 95); strokeWeight(4); circle(bx, by, constrain(R * 2.6 / n, 10, 22) * 2 + 10); }
   noStroke(); textAlign(LEFT, TOP); textSize(16);
   for (let m of msgs) { if (!m) continue; fill(0, 0, 88); text(m, px, yy, w); yy += textWidthLines(m, w) * 24 + 14; }
   fill(0, 0, 55); textSize(14);

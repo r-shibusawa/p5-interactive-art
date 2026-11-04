@@ -12,7 +12,7 @@ let q = [];                 // 各関節の角度（1 つ前のリンクから�
 let method = 1;             // 1 = CCD, 2 = ヤコビアン転置
 let limitOn = false;        // 関節制限 ±100°
 let maxAngle = Math.PI * 100 / 180;   // 関節制限（ラジアン）
-let gain = 0.0012;          // ★ ヤコビアン転置のステップ幅
+let gain = 0.5;             // ★ ヤコビアン転置のステップ幅（Σ|∂手先/∂q_i|² で割るので距離の単位によらない）
 let itersPerFrame = 1;      // ★ 1 フレームに何回反復するか
 let stepMode = false;       // スペースで手動
 let iterCount = 0;          // 目標が動いてからの反復回数
@@ -60,17 +60,20 @@ function ccdStep(tx, ty) {
   }
 }
 
-// ★ ヤコビアン転置：Δq = k · Jᵀ · (目標 − 手先)
+// ★ ヤコビアン転置：Δq = k · Jᵀ · (目標 − 手先) / Σ|∂手先/∂q_i|²
 //   関節 i を少し回すと手先は「関節 i から手先へのベクトルを 90° 回したもの」の方向に動く
 function jacobianStep(tx, ty) {
   let pts = joints();
   let h = pts[n];
   let ex = tx - h.x, ey = -(ty - h.y);      // 誤差（y 上向き）
+  let dq = [], norm = 0;
   for (let i = 0; i < n; i++) {
     let rx = h.x - pts[i].x, ry = -(h.y - pts[i].y);
     let jx = -ry, jy = rx;                  // ∂手先/∂q_i
-    q[i] += gain * (jx * ex + jy * ey);
+    dq.push(jx * ex + jy * ey);
+    norm += jx * jx + jy * jy;              // px² の大きさ。割らないと 1 歩で何周も回って発散する
   }
+  for (let i = 0; i < n; i++) q[i] += gain * dq[i] / (norm || 1);
   clampQ();
 }
 
@@ -160,6 +163,6 @@ function keyPressed() {
 
 // ---------- やってみよう ----------
 // 1. 同じ目標に対して 1 と 2 で「収束までの回数」と「腕の形」を比べよう（グラフを見る）
-// 2. gain を 0.003 にすると速いが震える。0.0003 だと？ 安定と速さのトレードオフ
+// 2. gain を 1.5 にすると速いが、届かない遠くの目標で腕が暴れる。0.1 だと？ 安定と速さのトレードオフ
 // 3. L で関節制限をつけると届かない目標が出てくる。どんな場所？
 // 4. 腕を 8 本にして、スペース＋→ で 1 回ずつ進め、CCD の「先端から順に」を目で追う

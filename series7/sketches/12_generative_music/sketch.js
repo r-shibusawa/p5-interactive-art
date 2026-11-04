@@ -74,7 +74,7 @@ function scheduler() {
       let len = stepIdx % 4 === 0 ? dur * 3 : dur * 1.5; // ★ 拍の頭は長く
       playNote(440 * pow(2, (midi - 69) / 12), stepIdx % 4 === 0 ? 0.3 : 0.18, len, 'triangle', nextTime); // ★ 音色
       let when = nextTime, d = degree, big = stepIdx % 4 === 0;
-      setTimeout(() => bubbles.push({ x: map(d, 0, 10, 100, width - 100), y: height * 0.3, vy: -2, size: big ? 40 : 20, hue: (d * 36) % 360, life: 100 }), max(0, (when - audioCtx.currentTime) * 1000));
+      setTimeout(() => bubbles.push({ x: map(d, 0, max(10, st.length * 2 - 1), 100, width - 100), y: height * 0.3, vy: -2, size: big ? 40 : 20, hue: (d * 36) % 360, life: 100 }), max(0, (when - audioCtx.currentTime) * 1000));
     }
     // ★ ベース：1 拍ごとに根音
     if (stepIdx % 4 === 0) playNote(440 * pow(2, (48 - 69) / 12), 0.15, dur * 3.5, 'sine', nextTime);

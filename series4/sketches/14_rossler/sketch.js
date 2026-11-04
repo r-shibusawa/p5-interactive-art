@@ -81,6 +81,7 @@ function keyPressed() {
     type = int(key);
     trail = [];
     x = 1; y = 1; z = 1;
+    if (type === 2) { x = 1.1; y = 1.1; z = -0.01; } // x = y = z だと対称なまま 1 点に落ちてしまうので、少しくずす
     if (type === 3) { x = 0.1; y = 0; z = 0; }
   }
 }

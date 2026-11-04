@@ -37,10 +37,13 @@ function choose(a, b) { let r = 1; for (let i = 1; i <= b; i++) r = (r * (a - b 
 
 function drawList() {
   let cell = solutions.length > 200 ? 6 : solutions.length > 60 ? 9 : 13;
-  tileW = (n + k - 1) * cell + 14;
-  tileH = cell + 5;
   listX = 30; listY = 330;
-  perRow = Math.max(1, Math.floor((width * 0.62 - 40) / tileW));
+  for (; cell >= 3; cell--) {              // 画面の下にはみ出すときはマスを小さくする
+    tileW = (n + k - 1) * cell + 14;
+    tileH = cell + 5;
+    perRow = Math.max(1, Math.floor((width * 0.62 - 40) / tileW));
+    if (cell === 3 || listY + Math.ceil(solutions.length / perRow) * tileH <= height - 16) break;
+  }
   listLayer.clear();
   listLayer.colorMode(HSB, 360, 100, 100, 100);
   listLayer.noStroke();
