@@ -1,6 +1,9 @@
 // ===== 06 映像レシピ：回転する光 =====
 // colorMode(HSB) と rotate を使った映像。音楽に合わせて回転・変色する
 
+// ※ これはレシピです。sketch.js ではなく、14 のスタジオの左の黒い欄に貼って Ctrl + Enter（Mac は ⌘ + Enter）
+if (typeof bpm === 'undefined') throw new Error('これはライブコーディングのレシピです。sketch.js には 14 のスタジオを貼って ▶、このレシピはスタジオ左の黒い欄に貼って Ctrl + Enter（Mac は ⌘ + Enter）で動かします');
+
 bpm(128)
 
 drum('kick',  'x...x...x...x...')

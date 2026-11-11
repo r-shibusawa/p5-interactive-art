@@ -42,6 +42,7 @@
     .group-head { display: flex; align-items: baseline; gap: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--fg); }
     .group-head .no { font-family: var(--mono); font-size: 12px; color: var(--accent); letter-spacing: 0.12em; }
     .group-head h2 { margin: 0; font-size: 20px; font-weight: 800; }
+    .recipe-note { font-size: 14px; color: var(--muted); margin: 0 0 10px; }
     .group-note { color: var(--muted); font-size: 14px; margin: 14px 0 0; }
 
     details { border-bottom: 1px solid var(--line); }
@@ -162,10 +163,11 @@
         </summary>
         <div class="body">
           <div class="toolbar">
-            <button class="btn small primary copy">コードをコピー</button>
+            <button class="btn small primary copy">${recipe ? 'レシピをコピー' : 'コードをコピー'}</button>
             <a class="btn small" href="${run}" target="_blank" rel="noopener">${recipe ? 'スタジオで開く' : '動かしてみる'} ↗</a>
             <a class="btn small" href="https://github.com/${REPO}/blob/main/series1/${path}" target="_blank" rel="noopener">GitHub</a>
           </div>
+          ${recipe ? '<p class="recipe-note">⚠ sketch.js には貼りません。14 のスタジオを開き、左の黒い欄に貼って Ctrl + Enter（Mac は ⌘ + Enter）。「スタジオで開く」ならすぐ試せます。</p>' : ''}
           <pre><code>読み込み中…</code></pre>
         </div>`;
       const code = d.querySelector('code');
@@ -185,7 +187,7 @@
         }
         btn.textContent = 'コピーしました';
         btn.classList.add('copied');
-        setTimeout(() => { btn.textContent = 'コードをコピー'; btn.classList.remove('copied'); }, 1500);
+        setTimeout(() => { btn.textContent = recipe ? 'レシピをコピー' : 'コードをコピー'; btn.classList.remove('copied'); }, 1500);
       });
       return d;
     }

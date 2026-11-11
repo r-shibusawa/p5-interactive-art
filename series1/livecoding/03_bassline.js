@@ -3,6 +3,9 @@
 // 音名：C D E F G A B（ド〜シ）＋ 数字（オクターブ。小さいほど低い）
 //       C# のように # をつけると半音上がる   . = 休み
 
+// ※ これはレシピです。sketch.js ではなく、14 のスタジオの左の黒い欄に貼って Ctrl + Enter（Mac は ⌘ + Enter）
+if (typeof bpm === 'undefined') throw new Error('これはライブコーディングのレシピです。sketch.js には 14 のスタジオを貼って ▶、このレシピはスタジオ左の黒い欄に貼って Ctrl + Enter（Mac は ⌘ + Enter）で動かします');
+
 bpm(120)
 
 drum('kick', 'x...x...x...x...')

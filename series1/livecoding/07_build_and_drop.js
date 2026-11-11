@@ -3,6 +3,9 @@
 // 下の // を1つずつ消して Ctrl + Enter → 曲がだんだん盛り上がる！
 // 最後は ① 〜 ③ をまとめて // に戻して…「ドロップ」で一気に解放
 
+// ※ これはレシピです。sketch.js ではなく、14 のスタジオの左の黒い欄に貼って Ctrl + Enter（Mac は ⌘ + Enter）
+if (typeof bpm === 'undefined') throw new Error('これはライブコーディングのレシピです。sketch.js には 14 のスタジオを貼って ▶、このレシピはスタジオ左の黒い欄に貼って Ctrl + Enter（Mac は ⌘ + Enter）で動かします');
+
 bpm(126)
 
 // --- STEP A：静かに始める ---

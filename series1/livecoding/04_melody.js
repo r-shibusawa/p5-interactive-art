@@ -2,6 +2,9 @@
 // ? = パターンの中の音から、毎回ランダムに1つ選んで鳴らす
 // 名前を変えれば、synth をいくつでも重ねられる
 
+// ※ これはレシピです。sketch.js ではなく、14 のスタジオの左の黒い欄に貼って Ctrl + Enter（Mac は ⌘ + Enter）
+if (typeof bpm === 'undefined') throw new Error('これはライブコーディングのレシピです。sketch.js には 14 のスタジオを貼って ▶、このレシピはスタジオ左の黒い欄に貼って Ctrl + Enter（Mac は ⌘ + Enter）で動かします');
+
 bpm(118)
 
 drum('kick',  'x...x...x...x...')

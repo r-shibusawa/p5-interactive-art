@@ -4,6 +4,9 @@
 //   v.kick v.snare v.hat v.clap v.note … その音が鳴ると 1、だんだん 0 に戻る
 //   v.step（0〜15） v.beat（0〜3） v.bar（小節） v.t（秒） v.level（音量 0〜1）
 
+// ※ これはレシピです。sketch.js ではなく、14 のスタジオの左の黒い欄に貼って Ctrl + Enter（Mac は ⌘ + Enter）
+if (typeof bpm === 'undefined') throw new Error('これはライブコーディングのレシピです。sketch.js には 14 のスタジオを貼って ▶、このレシピはスタジオ左の黒い欄に貼って Ctrl + Enter（Mac は ⌘ + Enter）で動かします');
+
 bpm(120)
 
 drum('kick',  'x...x...x...x...')
