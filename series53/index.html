@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>シリーズ53 天体（地球と宇宙） ─ p5.js コード集</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+JP:wght@400;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #000; --fg: #ededed; --muted: #8a8a8a; --dim: #555; --line: #1e1e1e; --panel: #0b0b0b;
+      --accent: #e8b65a;
+      --sans: 'Inter', 'Noto Sans JP', system-ui, sans-serif;
+      --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--sans); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; }
+    .wrap { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+
+    header { padding: 96px 0 64px; border-bottom: 1px solid var(--line); }
+    .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase; }
+    .eyebrow b { color: var(--accent); font-weight: 600; }
+    h1 { font-size: clamp(36px, 7vw, 72px); line-height: 1.1; font-weight: 900; letter-spacing: -0.02em; margin: 20px 0 20px; }
+    .lead { color: var(--muted); margin: 0 0 36px; max-width: 34em; }
+    .actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; font: 600 14px var(--sans); text-decoration: none; border: 1px solid var(--fg); color: var(--fg); background: transparent; cursor: pointer; border-radius: 0; transition: background .15s, color .15s; }
+    .btn:hover { background: var(--fg); color: var(--bg); }
+    .btn.primary { background: var(--accent); border-color: var(--accent); color: #000; }
+    .btn.primary:hover { background: #fff; border-color: #fff; }
+    .btn.small { padding: 7px 14px; font-size: 13px; }
+
+    .howto { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--line); }
+    .howto div { padding: 28px 20px 28px 0; font-size: 14px; color: var(--muted); }
+    .howto div + div { padding-left: 20px; border-left: 1px solid var(--line); }
+    .howto span { display: block; font-family: var(--mono); color: var(--accent); font-size: 12px; margin-bottom: 8px; }
+    .howto b { color: var(--fg); font-weight: 700; }
+    @media (max-width: 720px) { .howto { grid-template-columns: 1fr 1fr; } .howto div:nth-child(3) { padding-left: 0; border-left: none; } }
+
+    .group { margin-top: 72px; }
+    .group-head { display: flex; align-items: baseline; gap: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--fg); }
+    .group-head .no { font-family: var(--mono); font-size: 12px; color: var(--accent); letter-spacing: 0.12em; }
+    .group-head h2 { margin: 0; font-size: 20px; font-weight: 800; }
+    .group-note { color: var(--muted); font-size: 14px; margin: 14px 0 0; }
+
+    details { border-bottom: 1px solid var(--line); }
+    summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 56px 1fr auto 20px; gap: 16px; align-items: center; padding: 20px 0; }
+    summary::-webkit-details-marker { display: none; }
+    summary:hover .title { color: var(--accent); }
+    .num { font-family: var(--mono); font-size: 14px; color: var(--dim); }
+    .title { font-weight: 700; font-size: 16px; transition: color .15s; }
+    .desc { display: block; color: var(--muted); font-size: 13px; font-weight: 400; }
+    .tags { display: flex; gap: 6px; }
+    .tag { font-family: var(--mono); font-size: 11px; color: var(--muted); border: 1px solid #333; padding: 1px 8px; letter-spacing: 0.06em; }
+    .chev { font-family: var(--mono); color: var(--dim); transition: transform .2s; }
+    details[open] .chev { transform: rotate(45deg); color: var(--accent); }
+    @media (max-width: 640px) { summary { grid-template-columns: 40px 1fr 16px; } .tags { display: none; } }
+
+    .body { padding: 0 0 24px 72px; }
+    @media (max-width: 640px) { .body { padding-left: 0; } }
+    .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+    pre { margin: 0; background: var(--panel); border: 1px solid var(--line); padding: 18px 20px; overflow: auto; max-height: 520px; font: 13px/1.6 var(--mono); color: #d8d8d8; }
+    .copied { background: var(--accent) !important; border-color: var(--accent) !important; color: #000 !important; }
+
+    footer { margin: 96px 0 0; padding: 32px 0 48px; border-top: 1px solid var(--line); color: var(--dim); font: 12px var(--mono); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="eyebrow"><a href="../" style="text-decoration:none;color:var(--muted)">← SERIES</a> &nbsp;/&nbsp; <b>SERIES 53</b> &nbsp;/&nbsp; Earth and Space</div>
+      <h1>天体<br>地球と宇宙<br>コード集</h1>
+      <p class="lead">足元の地球から宇宙の果てまで、計算で確かめる天文学。昼夜と季節、月の満ち欠けと食、潮汐、星空の回転から、軌道要素で計算する惑星の位置と逆行、ホーマン軌道とスイングバイ、黒体放射と星の色、HR 図、距離のはしご、系外惑星、銀河の回転曲線と宇宙の膨張まで。実際の式と実際のデータ（おおよその値）で計算し、数字はすべて画面に出します。どのスケッチも起動時に自己テストで計算を確かめます。</p>
+      <div class="actions">
+        <a class="btn primary" href="https://editor.p5js.org/" target="_blank" rel="noopener">p5.js Web Editor を開く →</a>
+        <a class="btn" id="zip" href="#">ZIP でダウンロード</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="howto">
+      <div><span>01</span>番号を開いて<b>「コードをコピー」</b></div>
+      <div><span>02</span>エディタの <b>sketch.js</b> を全部消して貼り付け</div>
+      <div><span>03</span>左上の <b>▶</b> で実行</div>
+      <div><span>04</span>どれも<b>一番下の「天文の道具」まで</b>全部コピー。音（14）はまずクリック、音量は小さめから</div>
+    </div>
+
+    <div id="list"></div>
+
+    <footer>p5.js Interactive Art Workshop — Series 53: Earth and Space — MIT License. 自由に改造して使ってください。</footer>
+  </div>
+
+  <script>
+    const REPO = 'r-shibusawa/p5-interactive-art';
+    document.getElementById('zip').href = `https://github.com/${REPO}/archive/refs/heads/main.zip`;
+
+    const GROUPS = [
+      { no: 'STEP 1', title: '地球と月', items: [
+        { id: '00_seasons', title: '昼と夜・季節', desc: '地軸の傾き 23.44°。緯度と日付から太陽の赤緯・昼の長さ・南中高度・日射量を計算し、1 年のグラフ' },
+        { id: '01_moon_phases_eclipses', title: '月の満ち欠けと日食・月食', desc: '離角から光っている割合。白道の傾き 5.1° のため、交点の近くの新月・満月だけが食になる' },
+        { id: '02_tides', title: '潮汐', desc: '月と太陽の引力の差（潮汐力）のベクトル場、ふくらみ 2 つ、大潮と小潮の比' },
+        { id: '03_starry_sky', title: '星空の回転', desc: '明るい星 52 個の赤経・赤緯を、緯度と恒星時から高度・方位に。日周運動の軌跡と星座の線' },
+      ]},
+      { no: 'STEP 2', title: '太陽系', items: [
+        { id: '04_planet_positions', title: '惑星の位置', desc: 'J2000 の軌道要素とケプラー方程式（ニュートン法）でその日の位置。T² / a³ = 1 を実データで' },
+        { id: '05_retrograde', title: '惑星の逆行', desc: '地球から見た火星・木星・土星の黄経。衝のころの逆行と、プトレマイオスの周転円との比較' },
+        { id: '06_hohmann_transfer', title: 'ホーマン軌道で火星へ', desc: 'vis-viva で Δv、所要時間 259 日、位相角 44°。打ち上げの窓を見つけて火星に会うゲーム' },
+        { id: '07_gravity_assist', title: 'スイングバイ', desc: '惑星から見ると速さは同じ、太陽から見ると速くなる。RK4 の軌道とエネルギーの変化' },
+      ]},
+      { no: 'STEP 3', title: '恒星', items: [
+        { id: '08_blackbody_stars', title: '黒体放射と星の色', desc: 'プランクの式、ウィーンの法則、σT⁴。色合わせ関数で積分して星の色を計算' },
+        { id: '09_hr_diagram', title: 'HR 図', desc: '光度と温度から半径（L = 4πR²σT⁴）。主系列・巨星・白色矮星、質量と寿命の目安' },
+        { id: '10_distance_ladder', title: '距離のはしご', desc: '年周視差 d = 1/p、セファイドの周期-光度関係と距離指数、はしごの全体' },
+        { id: '11_exoplanet_transit', title: '系外惑星を見つける', desc: 'ノイズのある光度曲線を折りたたんで周期と (Rp/R*)²。視線速度の振幅 K' },
+      ]},
+      { no: 'STEP 4', title: '銀河と宇宙', items: [
+        { id: '12_galaxy_rotation', title: '銀河の回転曲線', desc: '見える物質だけなら外側は遅くなるはず。平らな回転曲線と暗黒物質のハロー' },
+        { id: '13_hubble_expansion', title: '宇宙の膨張', desc: 'ぶどうパン模型と、距離-速度のグラフの最小二乗で H₀。宇宙の年齢の目安 1/H₀' },
+      ]},
+      { no: 'STEP 5', title: '音・自由制作', items: [
+        { id: '14_orbit_music', title: '惑星の音楽', desc: '公転をリズムに。ガリレオ衛星の 1 : 2 : 4（ラプラス共鳴）、TRAPPIST-1 の共鳴の鎖', tags: ['SOUND'] },
+      ]},
+      { no: 'EXTRA', title: '発展編', items: [
+        { id: '15_webcam_star_trails', title: 'カメラで星の軌跡', desc: '映像の明るい点を天の北極のまわりに回して重ね、長時間露光のような日周運動のアートに', tags: ['CAMERA'] },
+      ]},
+    ];
+
+    const list = document.getElementById('list');
+    for (const g of GROUPS) {
+      const sec = document.createElement('section');
+      sec.className = 'group';
+      sec.innerHTML = `<div class="group-head"><span class="no">${g.no}</span><h2>${g.title}</h2></div>` +
+        (g.note ? `<p class="group-note">${g.note}</p>` : '');
+      for (const s of g.items) sec.appendChild(makeItem(s));
+      list.appendChild(sec);
+    }
+
+    function makeItem(s) {
+      const path = `sketches/${s.id}/sketch.js`;
+      const d = document.createElement('details');
+      d.innerHTML = `
+        <summary>
+          <span class="num">${s.id.slice(0, 2)}</span>
+          <span><span class="title">${s.title}</span><span class="desc">${s.desc}</span></span>
+          <span class="tags">${(s.tags || []).map(t => `<span class="tag">${t}</span>`).join('')}</span>
+          <span class="chev">+</span>
+        </summary>
+        <div class="body">
+          <div class="toolbar">
+            <button class="btn small primary copy">コードをコピー</button>
+            <a class="btn small" href="sketches/${s.id}/index.html" target="_blank" rel="noopener">動かしてみる ↗</a>
+            <a class="btn small" href="https://github.com/${REPO}/blob/main/series53/${path}" target="_blank" rel="noopener">GitHub</a>
+          </div>
+          <pre><code>読み込み中…</code></pre>
+        </div>`;
+      const code = d.querySelector('code');
+      const btn = d.querySelector('.copy');
+      let text = '';
+      fetch(path)
+        .then(r => r.text())
+        .then(t => { text = t; code.textContent = t; })
+        .catch(() => { code.textContent = '読み込みに失敗しました。「GitHub」から開いてください。'; });
+      btn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch (e) {
+          const ta = document.createElement('textarea');
+          ta.value = text; document.body.appendChild(ta); ta.select();
+          document.execCommand('copy'); ta.remove();
+        }
+        btn.textContent = 'コピーしました';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'コードをコピー'; btn.classList.remove('copied'); }, 1500);
+      });
+      return d;
+    }
+  </script>
+</body>
+</html>

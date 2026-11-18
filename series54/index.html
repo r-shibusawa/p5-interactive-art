@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>シリーズ54 電磁気学 ─ p5.js コード集</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+JP:wght@400;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #000; --fg: #ededed; --muted: #8a8a8a; --dim: #555; --line: #1e1e1e; --panel: #0b0b0b;
+      --accent: #e8915a;
+      --sans: 'Inter', 'Noto Sans JP', system-ui, sans-serif;
+      --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--sans); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; }
+    .wrap { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+
+    header { padding: 96px 0 64px; border-bottom: 1px solid var(--line); }
+    .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase; }
+    .eyebrow b { color: var(--accent); font-weight: 600; }
+    h1 { font-size: clamp(36px, 7vw, 72px); line-height: 1.1; font-weight: 900; letter-spacing: -0.02em; margin: 20px 0 20px; }
+    .lead { color: var(--muted); margin: 0 0 36px; max-width: 34em; }
+    .actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; font: 600 14px var(--sans); text-decoration: none; border: 1px solid var(--fg); color: var(--fg); background: transparent; cursor: pointer; border-radius: 0; transition: background .15s, color .15s; }
+    .btn:hover { background: var(--fg); color: var(--bg); }
+    .btn.primary { background: var(--accent); border-color: var(--accent); color: #000; }
+    .btn.primary:hover { background: #fff; border-color: #fff; }
+    .btn.small { padding: 7px 14px; font-size: 13px; }
+
+    .howto { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--line); }
+    .howto div { padding: 28px 20px 28px 0; font-size: 14px; color: var(--muted); }
+    .howto div + div { padding-left: 20px; border-left: 1px solid var(--line); }
+    .howto span { display: block; font-family: var(--mono); color: var(--accent); font-size: 12px; margin-bottom: 8px; }
+    .howto b { color: var(--fg); font-weight: 700; }
+    @media (max-width: 720px) { .howto { grid-template-columns: 1fr 1fr; } .howto div:nth-child(3) { padding-left: 0; border-left: none; } }
+
+    .group { margin-top: 72px; }
+    .group-head { display: flex; align-items: baseline; gap: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--fg); }
+    .group-head .no { font-family: var(--mono); font-size: 12px; color: var(--accent); letter-spacing: 0.12em; }
+    .group-head h2 { margin: 0; font-size: 20px; font-weight: 800; }
+    .group-note { color: var(--muted); font-size: 14px; margin: 14px 0 0; }
+
+    details { border-bottom: 1px solid var(--line); }
+    summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 56px 1fr auto 20px; gap: 16px; align-items: center; padding: 20px 0; }
+    summary::-webkit-details-marker { display: none; }
+    summary:hover .title { color: var(--accent); }
+    .num { font-family: var(--mono); font-size: 14px; color: var(--dim); }
+    .title { font-weight: 700; font-size: 16px; transition: color .15s; }
+    .desc { display: block; color: var(--muted); font-size: 13px; font-weight: 400; }
+    .tags { display: flex; gap: 6px; }
+    .tag { font-family: var(--mono); font-size: 11px; color: var(--muted); border: 1px solid #333; padding: 1px 8px; letter-spacing: 0.06em; }
+    .chev { font-family: var(--mono); color: var(--dim); transition: transform .2s; }
+    details[open] .chev { transform: rotate(45deg); color: var(--accent); }
+    @media (max-width: 640px) { summary { grid-template-columns: 40px 1fr 16px; } .tags { display: none; } }
+
+    .body { padding: 0 0 24px 72px; }
+    @media (max-width: 640px) { .body { padding-left: 0; } }
+    .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+    pre { margin: 0; background: var(--panel); border: 1px solid var(--line); padding: 18px 20px; overflow: auto; max-height: 520px; font: 13px/1.6 var(--mono); color: #d8d8d8; }
+    .copied { background: var(--accent) !important; border-color: var(--accent) !important; color: #000 !important; }
+
+    footer { margin: 96px 0 0; padding: 32px 0 48px; border-top: 1px solid var(--line); color: var(--dim); font: 12px var(--mono); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="eyebrow"><a href="../" style="text-decoration:none;color:var(--muted)">← SERIES</a> &nbsp;/&nbsp; <b>SERIES 54</b> &nbsp;/&nbsp; Electromagnetism</div>
+      <h1>電磁気学<br>コード集</h1>
+      <p class="lead">見えない「場」を、計算して描いて動かす。クーロンの法則・電気力線と等電位線・ガウスの法則・導体とコンデンサから、キルヒホッフの法則・RC 回路・RLC の共振、電流のつくる磁場・ローレンツ力・電磁誘導・モーターと発電機、そしてマクスウェル方程式を解く FDTD とアンテナからの電波、電磁波のスペクトルまで。場はどれも手で描かず、物理の式から数値で計算しています。テルミン風の楽器と、カメラ映像を電荷にする作品も。</p>
+      <div class="actions">
+        <a class="btn primary" href="https://editor.p5js.org/" target="_blank" rel="noopener">p5.js Web Editor を開く →</a>
+        <a class="btn" id="zip" href="#">ZIP でダウンロード</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="howto">
+      <div><span>01</span>番号を開いて<b>「コードをコピー」</b></div>
+      <div><span>02</span>エディタの <b>sketch.js</b> を全部消して貼り付け</div>
+      <div><span>03</span>左上の <b>▶</b> で実行</div>
+      <div><span>04</span>どれも<b>一番下の「電磁気の道具」まで</b>全部コピー。音（14）はまずクリック、音量は小さめから</div>
+    </div>
+
+    <div id="list"></div>
+
+    <footer>p5.js Interactive Art Workshop — Series 54: Electromagnetism — MIT License. 自由に改造して使ってください。</footer>
+  </div>
+
+  <script>
+    const REPO = 'r-shibusawa/p5-interactive-art';
+    document.getElementById('zip').href = `https://github.com/${REPO}/archive/refs/heads/main.zip`;
+
+    const GROUPS = [
+      { no: 'STEP 1', title: '静電気', items: [
+        { id: '00_coulomb', title: 'クーロンの法則', desc: '電荷をドラッグして力の矢印を見る。F = kq₁q₂/r²、距離 2 倍で 1/4。自由に動かすと引き合い・反発' },
+        { id: '01_field_lines', title: '電場と電位', desc: '電気力線を RK4 で追跡、等電位線をマーチング・スクエアで。双極子・同符号・四重極' },
+        { id: '02_gauss_law', title: 'ガウスの法則', desc: '閉じた曲線を描くと電束を数値積分。いつでも 中の電荷の合計 / ε0 に一致' },
+        { id: '03_capacitor', title: '導体とコンデンサ', desc: 'ラプラス方程式を SOR 法で解いて電気容量 C を計算。平行板・同軸・とがった導体' },
+      ]},
+      { no: 'STEP 2', title: '回路', items: [
+        { id: '04_circuits', title: '直流回路とキルヒホッフの法則', desc: '節点解析の連立方程式を毎フレーム解く。電流は点の流れ、電位は色。直列・並列・ブリッジ' },
+        { id: '05_rc_circuit', title: 'RC 回路', desc: '充電・放電を RK4 で。τ = RC で 63.2%、エネルギーの半分は熱。方形波でローパスフィルタ' },
+        { id: '06_rlc_resonance', title: 'RLC 回路と共振', desc: 'C と L のあいだをエネルギーが行き来する電気のふりこ。周波数を掃引して共振曲線と Q 値' },
+      ]},
+      { no: 'STEP 3', title: '磁気', items: [
+        { id: '07_biot_savart', title: '電流のつくる磁場', desc: 'ビオ・サバールの法則を数値で足して磁力線と方位磁針。直線・円電流・ソレノイド' },
+        { id: '08_lorentz_force', title: 'ローレンツ力', desc: 'ボリス法で荷電粒子の円運動・らせん・E×B ドリフト・質量分析器' },
+        { id: '09_faraday_induction', title: '電磁誘導', desc: '磁石を出し入れして磁束 Φ と起電力 −N dΦ/dt のグラフ。レンツの法則' },
+        { id: '10_motor_generator', title: 'モーターと発電機', desc: '磁場の中で回るコイル。発電機で交流、モーターは整流子あり・なしで比べる' },
+      ]},
+      { no: 'STEP 4', title: '電磁波', items: [
+        { id: '11_fdtd_waves', title: 'マクスウェル方程式を解く（FDTD）', desc: '電場と磁場を交互に更新して電磁波を計算。金属の壁で反射、箱の中で定在波' },
+        { id: '12_dipole_radiation', title: 'アンテナからの電波', desc: '振動する双極子の電気力線が切りはなされて飛んでいく（解析解）。放射の向き sin²θ' },
+        { id: '13_em_spectrum', title: '電磁波のスペクトル', desc: '電波からガンマ線まで対数の目盛りで。c = fλ、E = hf、身近な例と比べる' },
+      ]},
+      { no: 'STEP 5', title: '音・自由制作', items: [
+        { id: '14_theremin', title: 'テルミン風', desc: '手とアンテナの静電容量で LC 発振の周波数が変わる。2 つの発振器のうなりで音を鳴らす', tags: ['SOUND'] },
+      ]},
+      { no: 'EXTRA', title: '発展編', items: [
+        { id: '15_webcam_field', title: 'カメラ映像を電荷に', desc: '明るさを電荷密度にしてポアソン方程式を解き、電位の色と電気力線で映像を描き直す', tags: ['CAMERA'] },
+      ]},
+    ];
+
+    const list = document.getElementById('list');
+    for (const g of GROUPS) {
+      const sec = document.createElement('section');
+      sec.className = 'group';
+      sec.innerHTML = `<div class="group-head"><span class="no">${g.no}</span><h2>${g.title}</h2></div>` +
+        (g.note ? `<p class="group-note">${g.note}</p>` : '');
+      for (const s of g.items) sec.appendChild(makeItem(s));
+      list.appendChild(sec);
+    }
+
+    function makeItem(s) {
+      const path = `sketches/${s.id}/sketch.js`;
+      const d = document.createElement('details');
+      d.innerHTML = `
+        <summary>
+          <span class="num">${s.id.slice(0, 2)}</span>
+          <span><span class="title">${s.title}</span><span class="desc">${s.desc}</span></span>
+          <span class="tags">${(s.tags || []).map(t => `<span class="tag">${t}</span>`).join('')}</span>
+          <span class="chev">+</span>
+        </summary>
+        <div class="body">
+          <div class="toolbar">
+            <button class="btn small primary copy">コードをコピー</button>
+            <a class="btn small" href="sketches/${s.id}/index.html" target="_blank" rel="noopener">動かしてみる ↗</a>
+            <a class="btn small" href="https://github.com/${REPO}/blob/main/series54/${path}" target="_blank" rel="noopener">GitHub</a>
+          </div>
+          <pre><code>読み込み中…</code></pre>
+        </div>`;
+      const code = d.querySelector('code');
+      const btn = d.querySelector('.copy');
+      let text = '';
+      fetch(path)
+        .then(r => r.text())
+        .then(t => { text = t; code.textContent = t; })
+        .catch(() => { code.textContent = '読み込みに失敗しました。「GitHub」から開いてください。'; });
+      btn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch (e) {
+          const ta = document.createElement('textarea');
+          ta.value = text; document.body.appendChild(ta); ta.select();
+          document.execCommand('copy'); ta.remove();
+        }
+        btn.textContent = 'コピーしました';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'コードをコピー'; btn.classList.remove('copied'); }, 1500);
+      });
+      return d;
+    }
+  </script>
+</body>
+</html>
