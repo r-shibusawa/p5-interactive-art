@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>シリーズ63 強化学習 ─ p5.js コード集</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+JP:wght@400;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #000; --fg: #ededed; --muted: #8a8a8a; --dim: #555; --line: #1e1e1e; --panel: #0b0b0b;
+      --accent: #ffc43c;
+      --sans: 'Inter', 'Noto Sans JP', system-ui, sans-serif;
+      --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--sans); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; }
+    .wrap { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+
+    header { padding: 96px 0 64px; border-bottom: 1px solid var(--line); }
+    .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase; }
+    .eyebrow b { color: var(--accent); font-weight: 600; }
+    h1 { font-size: clamp(36px, 7vw, 72px); line-height: 1.1; font-weight: 900; letter-spacing: -0.02em; margin: 20px 0 20px; }
+    .lead { color: var(--muted); margin: 0 0 36px; max-width: 34em; }
+    .actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; font: 600 14px var(--sans); text-decoration: none; border: 1px solid var(--fg); color: var(--fg); background: transparent; cursor: pointer; border-radius: 0; transition: background .15s, color .15s; }
+    .btn:hover { background: var(--fg); color: var(--bg); }
+    .btn.primary { background: var(--accent); border-color: var(--accent); color: #000; }
+    .btn.primary:hover { background: #fff; border-color: #fff; }
+    .btn.small { padding: 7px 14px; font-size: 13px; }
+
+    .howto { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--line); }
+    .howto div { padding: 28px 20px 28px 0; font-size: 14px; color: var(--muted); }
+    .howto div + div { padding-left: 20px; border-left: 1px solid var(--line); }
+    .howto span { display: block; font-family: var(--mono); color: var(--accent); font-size: 12px; margin-bottom: 8px; }
+    .howto b { color: var(--fg); font-weight: 700; }
+    @media (max-width: 720px) { .howto { grid-template-columns: 1fr 1fr; } .howto div:nth-child(3) { padding-left: 0; border-left: none; } }
+
+    .group { margin-top: 72px; }
+    .group-head { display: flex; align-items: baseline; gap: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--fg); }
+    .group-head .no { font-family: var(--mono); font-size: 12px; color: var(--accent); letter-spacing: 0.12em; }
+    .group-head h2 { margin: 0; font-size: 20px; font-weight: 800; }
+    .group-note { color: var(--muted); font-size: 14px; margin: 14px 0 0; }
+
+    details { border-bottom: 1px solid var(--line); }
+    summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 56px 1fr auto 20px; gap: 16px; align-items: center; padding: 20px 0; }
+    summary::-webkit-details-marker { display: none; }
+    summary:hover .title { color: var(--accent); }
+    .num { font-family: var(--mono); font-size: 14px; color: var(--dim); }
+    .title { font-weight: 700; font-size: 16px; transition: color .15s; }
+    .desc { display: block; color: var(--muted); font-size: 13px; font-weight: 400; }
+    .tags { display: flex; gap: 6px; }
+    .tag { font-family: var(--mono); font-size: 11px; color: var(--muted); border: 1px solid #333; padding: 1px 8px; letter-spacing: 0.06em; }
+    .chev { font-family: var(--mono); color: var(--dim); transition: transform .2s; }
+    details[open] .chev { transform: rotate(45deg); color: var(--accent); }
+    @media (max-width: 640px) { summary { grid-template-columns: 40px 1fr 16px; } .tags { display: none; } }
+
+    .body { padding: 0 0 24px 72px; }
+    @media (max-width: 640px) { .body { padding-left: 0; } }
+    .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+    pre { margin: 0; background: var(--panel); border: 1px solid var(--line); padding: 18px 20px; overflow: auto; max-height: 520px; font: 13px/1.6 var(--mono); color: #d8d8d8; }
+    .copied { background: var(--accent) !important; border-color: var(--accent) !important; color: #000 !important; }
+
+    footer { margin: 96px 0 0; padding: 32px 0 48px; border-top: 1px solid var(--line); color: var(--dim); font: 12px var(--mono); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="eyebrow"><a href="../" style="text-decoration:none;color:var(--muted)">← SERIES</a> &nbsp;/&nbsp; <b>SERIES 63</b> &nbsp;/&nbsp; Reinforcement Learning</div>
+      <h1>強化学習<br>コード集</h1>
+      <p class="lead">正解を教えられずに、報酬だけを手がかりに試行錯誤で行動を学ぶ。多腕バンディット、マルコフ決定過程と価値反復・方策反復、モンテカルロと TD 学習、Q 学習と SARSA、探索の工夫、タイルコーディングの山登り車、Dyna-Q、方策勾配、小さなニューラルネットの Q 学習、三目並べの自己対戦、報酬の設計と「ずる」、人が耳や体で与える報酬まで。どのスケッチも機械学習ライブラリなしで本当に計算し、起動時の自己テストで答えを確かめています。</p>
+      <div class="actions">
+        <a class="btn primary" href="https://editor.p5js.org/" target="_blank" rel="noopener">p5.js Web Editor を開く →</a>
+        <a class="btn" id="zip" href="#">ZIP でダウンロード</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="howto">
+      <div><span>01</span>番号を開いて<b>「コードをコピー」</b></div>
+      <div><span>02</span>エディタの <b>sketch.js</b> を全部消して貼り付け</div>
+      <div><span>03</span>左上の <b>▶</b> で実行</div>
+      <div><span>04</span>どれも<b>一番下の「強化学習の道具」まで</b>全部コピー。F キーで学習の速さ。音（14）はまずクリック、音量は小さめから</div>
+    </div>
+
+    <div id="list"></div>
+
+    <footer>p5.js Interactive Art Workshop — Series 63: Reinforcement Learning — MIT License. 自由に改造して使ってください。</footer>
+  </div>
+
+  <script>
+    const REPO = 'r-shibusawa/p5-interactive-art';
+    document.getElementById('zip').href = `https://github.com/${REPO}/archive/refs/heads/main.zip`;
+
+    const GROUPS = [
+      { no: 'STEP 1', title: '試行錯誤', items: [
+        { id: '00_bandit', title: '多腕バンディット', desc: '当たりの確率が隠れた 5 台。自分で引いてから、ε-greedy・UCB1・トンプソン抽出の後悔（regret）を比べる' },
+        { id: '01_mdp_gridworld', title: 'マルコフ決定過程とグリッドワールド', desc: '壁・宝・落とし穴をクリックで置き、γ とすべりやすさを設定。でたらめ方策の報酬の合計と価値' },
+        { id: '02_value_iteration', title: '価値反復', desc: 'ベルマン最適方程式のくり返しで価値が広がる。最大の変化量のグラフと最適方策、すべると遠回りに' },
+        { id: '03_policy_iteration', title: '方策反復', desc: '方策評価 → 方策改善を数回くり返して最適方策へ。価値反復と回数・計算量を比べる' },
+      ]},
+      { no: 'STEP 2', title: '経験から学ぶ', items: [
+        { id: '04_mc_vs_td', title: 'モンテカルロと TD 学習', desc: '5 状態のランダムウォーク（真の価値 1/6〜5/6）で、最後まで待つ MC と 1 歩ごとの TD(0) の誤差を比べる' },
+        { id: '05_q_learning', title: 'Q 学習', desc: '迷路で Q 表を学ぶ。4 方向の値を三角形の色で、エピソードごとの歩数、学習後の貪欲方策' },
+        { id: '06_cliff_sarsa', title: '崖歩きと SARSA', desc: '4 × 12 の崖。Q 学習は崖ぎりぎりの最短路、SARSA は安全な遠回り。エピソードごとの報酬' },
+        { id: '07_exploration', title: '探索の工夫', desc: 'ε 一定・減衰、楽観的な初期値、ボルツマン選択。報酬が遠くにしかない迷路では探索が大事' },
+      ]},
+      { no: 'STEP 3', title: '大きな問題へ', items: [
+        { id: '08_mountain_car', title: '山登り車とタイルコーディング', desc: '勢いをつけないと登れない車。位置 × 速度をタイルコーディングで表し SARSA で学ぶ。コストの地形' },
+        { id: '09_dyna_maze', title: 'モデルを使う Dyna-Q', desc: '経験からモデルを作り、頭の中で計画もする。計画回数 0・5・50、壁が動く迷路と Dyna-Q+' },
+        { id: '10_reinforce', title: '方策勾配 REINFORCE', desc: '行動の確率を直接学ぶ。見分けのつかない廊下、ベースラインで分散が小さくなる' },
+        { id: '11_tiny_dqn', title: '小さなニューラルネットで Q 学習', desc: '「キャッチ」ゲーム。手書きの誤差逆伝播、経験再生とターゲットネットワーク、成功率のグラフ' },
+      ]},
+      { no: 'STEP 4', title: '対戦と報酬設計', items: [
+        { id: '12_tictactoe_selfplay', title: '三目並べの自己対戦', desc: '盤面の価値を TD 学習で覚えるエージェント同士の対戦。学習後のエージェントとクリックで対戦' },
+        { id: '13_reward_design', title: '報酬の設計と「ずる」', desc: '「近づいたらごほうび」は行ったり来たりの報酬ハッキングに。ポテンシャル整形なら最適方策は同じ' },
+      ]},
+      { no: 'STEP 5', title: '音・自由制作', items: [
+        { id: '14_reward_by_ear', title: '耳で報酬を与える', desc: 'フレーズを鳴らして「好き/きらい」で報酬。一定の学習率で、好みの変化についていく', tags: ['SOUND'] },
+      ]},
+      { no: 'EXTRA', title: '発展編', items: [
+        { id: '15_webcam_human_reward', title: '体で報酬を与える', desc: '手を振る動き（フレーム差分）が報酬。画面の生き物が勾配バンディットで動き方を学ぶ', tags: ['CAMERA'] },
+      ]},
+    ];
+
+    const list = document.getElementById('list');
+    for (const g of GROUPS) {
+      const sec = document.createElement('section');
+      sec.className = 'group';
+      sec.innerHTML = `<div class="group-head"><span class="no">${g.no}</span><h2>${g.title}</h2></div>` +
+        (g.note ? `<p class="group-note">${g.note}</p>` : '');
+      for (const s of g.items) sec.appendChild(makeItem(s));
+      list.appendChild(sec);
+    }
+
+    function makeItem(s) {
+      const path = `sketches/${s.id}/sketch.js`;
+      const d = document.createElement('details');
+      d.innerHTML = `
+        <summary>
+          <span class="num">${s.id.slice(0, 2)}</span>
+          <span><span class="title">${s.title}</span><span class="desc">${s.desc}</span></span>
+          <span class="tags">${(s.tags || []).map(t => `<span class="tag">${t}</span>`).join('')}</span>
+          <span class="chev">+</span>
+        </summary>
+        <div class="body">
+          <div class="toolbar">
+            <button class="btn small primary copy">コードをコピー</button>
+            <a class="btn small" href="sketches/${s.id}/index.html" target="_blank" rel="noopener">動かしてみる ↗</a>
+            <a class="btn small" href="https://github.com/${REPO}/blob/main/series63/${path}" target="_blank" rel="noopener">GitHub</a>
+          </div>
+          <pre><code>読み込み中…</code></pre>
+        </div>`;
+      const code = d.querySelector('code');
+      const btn = d.querySelector('.copy');
+      let text = '';
+      fetch(path)
+        .then(r => r.text())
+        .then(t => { text = t; code.textContent = t; })
+        .catch(() => { code.textContent = '読み込みに失敗しました。「GitHub」から開いてください。'; });
+      btn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch (e) {
+          const ta = document.createElement('textarea');
+          ta.value = text; document.body.appendChild(ta); ta.select();
+          document.execCommand('copy'); ta.remove();
+        }
+        btn.textContent = 'コピーしました';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'コードをコピー'; btn.classList.remove('copied'); }, 1500);
+      });
+      return d;
+    }
+  </script>
+</body>
+</html>
