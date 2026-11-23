@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>シリーズ59 マックスプラス代数 ─ p5.js コード集</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+JP:wght@400;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #000; --fg: #ededed; --muted: #8a8a8a; --dim: #555; --line: #1e1e1e; --panel: #0b0b0b;
+      --accent: #ffa630;
+      --sans: 'Inter', 'Noto Sans JP', system-ui, sans-serif;
+      --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--sans); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; }
+    .wrap { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+
+    header { padding: 96px 0 64px; border-bottom: 1px solid var(--line); }
+    .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase; }
+    .eyebrow b { color: var(--accent); font-weight: 600; }
+    h1 { font-size: clamp(36px, 7vw, 72px); line-height: 1.1; font-weight: 900; letter-spacing: -0.02em; margin: 20px 0 20px; }
+    .lead { color: var(--muted); margin: 0 0 36px; max-width: 34em; }
+    .actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; font: 600 14px var(--sans); text-decoration: none; border: 1px solid var(--fg); color: var(--fg); background: transparent; cursor: pointer; border-radius: 0; transition: background .15s, color .15s; }
+    .btn:hover { background: var(--fg); color: var(--bg); }
+    .btn.primary { background: var(--accent); border-color: var(--accent); color: #000; }
+    .btn.primary:hover { background: #fff; border-color: #fff; }
+    .btn.small { padding: 7px 14px; font-size: 13px; }
+
+    .howto { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--line); }
+    .howto div { padding: 28px 20px 28px 0; font-size: 14px; color: var(--muted); }
+    .howto div + div { padding-left: 20px; border-left: 1px solid var(--line); }
+    .howto span { display: block; font-family: var(--mono); color: var(--accent); font-size: 12px; margin-bottom: 8px; }
+    .howto b { color: var(--fg); font-weight: 700; }
+    @media (max-width: 720px) { .howto { grid-template-columns: 1fr 1fr; } .howto div:nth-child(3) { padding-left: 0; border-left: none; } }
+
+    .group { margin-top: 72px; }
+    .group-head { display: flex; align-items: baseline; gap: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--fg); }
+    .group-head .no { font-family: var(--mono); font-size: 12px; color: var(--accent); letter-spacing: 0.12em; }
+    .group-head h2 { margin: 0; font-size: 20px; font-weight: 800; }
+    .group-note { color: var(--muted); font-size: 14px; margin: 14px 0 0; }
+
+    details { border-bottom: 1px solid var(--line); }
+    summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 56px 1fr auto 20px; gap: 16px; align-items: center; padding: 20px 0; }
+    summary::-webkit-details-marker { display: none; }
+    summary:hover .title { color: var(--accent); }
+    .num { font-family: var(--mono); font-size: 14px; color: var(--dim); }
+    .title { font-weight: 700; font-size: 16px; transition: color .15s; }
+    .desc { display: block; color: var(--muted); font-size: 13px; font-weight: 400; }
+    .tags { display: flex; gap: 6px; }
+    .tag { font-family: var(--mono); font-size: 11px; color: var(--muted); border: 1px solid #333; padding: 1px 8px; letter-spacing: 0.06em; }
+    .chev { font-family: var(--mono); color: var(--dim); transition: transform .2s; }
+    details[open] .chev { transform: rotate(45deg); color: var(--accent); }
+    @media (max-width: 640px) { summary { grid-template-columns: 40px 1fr 16px; } .tags { display: none; } }
+
+    .body { padding: 0 0 24px 72px; }
+    @media (max-width: 640px) { .body { padding-left: 0; } }
+    .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+    pre { margin: 0; background: var(--panel); border: 1px solid var(--line); padding: 18px 20px; overflow: auto; max-height: 520px; font: 13px/1.6 var(--mono); color: #d8d8d8; }
+    .copied { background: var(--accent) !important; border-color: var(--accent) !important; color: #000 !important; }
+
+    footer { margin: 96px 0 0; padding: 32px 0 48px; border-top: 1px solid var(--line); color: var(--dim); font: 12px var(--mono); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="eyebrow"><a href="../" style="text-decoration:none;color:var(--muted)">← SERIES</a> &nbsp;/&nbsp; <b>SERIES 59</b> &nbsp;/&nbsp; Max-Plus Algebra</div>
+      <h1>マックスプラス代数<br>コード集</h1>
+      <p class="lead">足し算を max に、掛け算を + に置きかえると、待ち合わせ・時刻表・生産ライン・最短経路が「1 次式」と「行列の計算」になる。半環のルール、行列の積と最長経路、推移的閉包 A*、引き算のない方程式（残余）、列車ダイヤと生産ライン、固有値＝サイクル時間（カープのアルゴリズム）、過渡と周期性、遅延の伝わり方、時間付きペトリネット、min-plus と最短経路、ビタビと脱量子化まで。どのスケッチも本当に計算し、起動時の自己テストで答えを確かめています。</p>
+      <div class="actions">
+        <a class="btn primary" href="https://editor.p5js.org/" target="_blank" rel="noopener">p5.js Web Editor を開く →</a>
+        <a class="btn" id="zip" href="#">ZIP でダウンロード</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="howto">
+      <div><span>01</span>番号を開いて<b>「コードをコピー」</b></div>
+      <div><span>02</span>エディタの <b>sketch.js</b> を全部消して貼り付け</div>
+      <div><span>03</span>左上の <b>▶</b> で実行</div>
+      <div><span>04</span>どれも<b>一番下の「マックスプラスの道具」まで</b>全部コピー。音（14）はまずクリック、音量は小さめから</div>
+    </div>
+
+    <div id="list"></div>
+
+    <footer>p5.js Interactive Art Workshop — Series 59: Max-Plus Algebra — MIT License. 自由に改造して使ってください。</footer>
+  </div>
+
+  <script>
+    const REPO = 'r-shibusawa/p5-interactive-art';
+    document.getElementById('zip').href = `https://github.com/${REPO}/archive/refs/heads/main.zip`;
+
+    const GROUPS = [
+      { no: 'STEP 1', title: '新しい算数', items: [
+        { id: '00_waiting_arithmetic', title: '待ち合わせの算数', desc: '揃ったら出発 = max、移動 = +。ゴールの時刻は 1 次式 a⊗t1⊗t2 ⊕ b⊗t1⊗t2 ⊕ c⊗t2。ε = 来ない人' },
+        { id: '01_semiring_laws', title: '半環のルール', desc: '交換・結合・分配・冪等を乱数で確かめる。(+, ×)・(max, +)・(min, +)・(max, min) を比べる、引き算がない' },
+        { id: '02_powers_roots', title: '冪と分数の冪', desc: 'a^{⊗n} = n·a、a^{⊗1/n} = a/n = 平均。くり返し 2 乗法とホーナー法で p(x) = max(c_k + kx)' },
+      ]},
+      { no: 'STEP 2', title: 'マックスプラス行列', items: [
+        { id: '03_matrix_longest_path', title: '行列の積と最長経路', desc: '(A^{⊗k})_ij = ちょうど k 本の辺の道の最大重み。全部の道を数えた総当たりと比べる' },
+        { id: '04_kleene_star', title: '推移的閉包 A*', desc: 'A* = E ⊕ A ⊕ … で全部の最長路を一度に。PERT の工期、きつい締め切り = 正の回路で発散' },
+        { id: '05_linear_equations', title: '線形方程式を解く', desc: '引き算なしで A ⊗ x = b を解く：残余（最大劣解）x_j = min_i (b_i − a_ij)。x = A ⊗ x ⊕ b の最小解 A* ⊗ b' },
+      ]},
+      { no: 'STEP 3', title: '時刻表と離散事象システム', items: [
+        { id: '06_train_timetable', title: '列車ダイヤ', desc: '乗り継ぎを守る 2〜4 路線を x(k) = A0* ⊗ A1 ⊗ x(k−1) で計算し、時間−距離のダイヤグラムに。周期 λ' },
+        { id: '07_production_line', title: '生産ライン', desc: '機械とパレットの漸化式とガントチャート。スループット 1/λ とボトルネックの入れかわり' },
+        { id: '08_eigen_cycle_time', title: '固有値とサイクル時間', desc: 'カープのアルゴリズムで最大平均回路 λ、臨界グラフ、固有ベクトル（定常ダイヤ）A ⊗ v = λ ⊗ v' },
+        { id: '09_transient_periodic', title: '過渡と周期性', desc: 'x(k) − kλ はしばらく揺れてから周期 c でくり返す。臨界グラフの巡回性と初期値' },
+        { id: '10_delay_propagation', title: '遅延の伝わり方', desc: '1 本の遅れがどこまで広がり、何周期で消えるか。余裕 s があれば ⌈d/s⌉ 周期以内に回復' },
+      ]},
+      { no: 'STEP 4', title: 'つながる世界', items: [
+        { id: '11_petri_net', title: '時間付きペトリネット', desc: 'トークンが動くイベントグラフ。シミュレーションの発火時刻とマックスプラスの漸化式が一致' },
+        { id: '12_min_plus_paths', title: 'min-plus と最短経路', desc: 'ベルマン-フォード = x ← A ⊗\' x ⊕\' b のくり返し。迷路に広がる距離の波、ダイクストラ法と比べる' },
+        { id: '13_viterbi_dequantization', title: 'ビタビと脱量子化', desc: '隠れマルコフモデルの最尤の道は対数の max-plus。h·log(e^{a/h} + e^{b/h}) → max（マスロフ）' },
+      ]},
+      { no: 'STEP 5', title: '音・自由制作', items: [
+        { id: '14_timetable_rhythm', title: '時刻表のリズム', desc: 'できごとを打楽器の音に。周期 λ がテンポ、巡回性が「何拍で 1 まわり」。臨界回路を変えて聞く', tags: ['SOUND'] },
+      ]},
+      { no: 'EXTRA', title: '発展編', items: [
+        { id: '15_webcam_maxplus', title: 'カメラ映像とマックスプラス', desc: '画像の膨張は max-plus のたたみこみ。収縮（min-plus）と距離変換も', tags: ['CAMERA'] },
+      ]},
+    ];
+
+    const list = document.getElementById('list');
+    for (const g of GROUPS) {
+      const sec = document.createElement('section');
+      sec.className = 'group';
+      sec.innerHTML = `<div class="group-head"><span class="no">${g.no}</span><h2>${g.title}</h2></div>` +
+        (g.note ? `<p class="group-note">${g.note}</p>` : '');
+      for (const s of g.items) sec.appendChild(makeItem(s));
+      list.appendChild(sec);
+    }
+
+    function makeItem(s) {
+      const path = `sketches/${s.id}/sketch.js`;
+      const d = document.createElement('details');
+      d.innerHTML = `
+        <summary>
+          <span class="num">${s.id.slice(0, 2)}</span>
+          <span><span class="title">${s.title}</span><span class="desc">${s.desc}</span></span>
+          <span class="tags">${(s.tags || []).map(t => `<span class="tag">${t}</span>`).join('')}</span>
+          <span class="chev">+</span>
+        </summary>
+        <div class="body">
+          <div class="toolbar">
+            <button class="btn small primary copy">コードをコピー</button>
+            <a class="btn small" href="sketches/${s.id}/index.html" target="_blank" rel="noopener">動かしてみる ↗</a>
+            <a class="btn small" href="https://github.com/${REPO}/blob/main/series59/${path}" target="_blank" rel="noopener">GitHub</a>
+          </div>
+          <pre><code>読み込み中…</code></pre>
+        </div>`;
+      const code = d.querySelector('code');
+      const btn = d.querySelector('.copy');
+      let text = '';
+      fetch(path)
+        .then(r => r.text())
+        .then(t => { text = t; code.textContent = t; })
+        .catch(() => { code.textContent = '読み込みに失敗しました。「GitHub」から開いてください。'; });
+      btn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch (e) {
+          const ta = document.createElement('textarea');
+          ta.value = text; document.body.appendChild(ta); ta.select();
+          document.execCommand('copy'); ta.remove();
+        }
+        btn.textContent = 'コピーしました';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'コードをコピー'; btn.classList.remove('copied'); }, 1500);
+      });
+      return d;
+    }
+  </script>
+</body>
+</html>

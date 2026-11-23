@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>シリーズ57 四元数と八元数 ─ p5.js コード集</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+JP:wght@400;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #000; --fg: #ededed; --muted: #8a8a8a; --dim: #555; --line: #1e1e1e; --panel: #0b0b0b;
+      --accent: #f2c14e;
+      --sans: 'Inter', 'Noto Sans JP', system-ui, sans-serif;
+      --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--sans); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; }
+    .wrap { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+
+    header { padding: 96px 0 64px; border-bottom: 1px solid var(--line); }
+    .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase; }
+    .eyebrow b { color: var(--accent); font-weight: 600; }
+    h1 { font-size: clamp(36px, 7vw, 72px); line-height: 1.1; font-weight: 900; letter-spacing: -0.02em; margin: 20px 0 20px; }
+    .lead { color: var(--muted); margin: 0 0 36px; max-width: 34em; }
+    .actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; font: 600 14px var(--sans); text-decoration: none; border: 1px solid var(--fg); color: var(--fg); background: transparent; cursor: pointer; border-radius: 0; transition: background .15s, color .15s; }
+    .btn:hover { background: var(--fg); color: var(--bg); }
+    .btn.primary { background: var(--accent); border-color: var(--accent); color: #000; }
+    .btn.primary:hover { background: #fff; border-color: #fff; }
+    .btn.small { padding: 7px 14px; font-size: 13px; }
+
+    .howto { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--line); }
+    .howto div { padding: 28px 20px 28px 0; font-size: 14px; color: var(--muted); }
+    .howto div + div { padding-left: 20px; border-left: 1px solid var(--line); }
+    .howto span { display: block; font-family: var(--mono); color: var(--accent); font-size: 12px; margin-bottom: 8px; }
+    .howto b { color: var(--fg); font-weight: 700; }
+    @media (max-width: 720px) { .howto { grid-template-columns: 1fr 1fr; } .howto div:nth-child(3) { padding-left: 0; border-left: none; } }
+
+    .group { margin-top: 72px; }
+    .group-head { display: flex; align-items: baseline; gap: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--fg); }
+    .group-head .no { font-family: var(--mono); font-size: 12px; color: var(--accent); letter-spacing: 0.12em; }
+    .group-head h2 { margin: 0; font-size: 20px; font-weight: 800; }
+    .group-note { color: var(--muted); font-size: 14px; margin: 14px 0 0; }
+
+    details { border-bottom: 1px solid var(--line); }
+    summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 56px 1fr auto 20px; gap: 16px; align-items: center; padding: 20px 0; }
+    summary::-webkit-details-marker { display: none; }
+    summary:hover .title { color: var(--accent); }
+    .num { font-family: var(--mono); font-size: 14px; color: var(--dim); }
+    .title { font-weight: 700; font-size: 16px; transition: color .15s; }
+    .desc { display: block; color: var(--muted); font-size: 13px; font-weight: 400; }
+    .tags { display: flex; gap: 6px; }
+    .tag { font-family: var(--mono); font-size: 11px; color: var(--muted); border: 1px solid #333; padding: 1px 8px; letter-spacing: 0.06em; }
+    .chev { font-family: var(--mono); color: var(--dim); transition: transform .2s; }
+    details[open] .chev { transform: rotate(45deg); color: var(--accent); }
+    @media (max-width: 640px) { summary { grid-template-columns: 40px 1fr 16px; } .tags { display: none; } }
+
+    .body { padding: 0 0 24px 72px; }
+    @media (max-width: 640px) { .body { padding-left: 0; } }
+    .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+    pre { margin: 0; background: var(--panel); border: 1px solid var(--line); padding: 18px 20px; overflow: auto; max-height: 520px; font: 13px/1.6 var(--mono); color: #d8d8d8; }
+    .copied { background: var(--accent) !important; border-color: var(--accent) !important; color: #000 !important; }
+
+    footer { margin: 96px 0 0; padding: 32px 0 48px; border-top: 1px solid var(--line); color: var(--dim); font: 12px var(--mono); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="eyebrow"><a href="../" style="text-decoration:none;color:var(--muted)">← SERIES</a> &nbsp;/&nbsp; <b>SERIES 57</b> &nbsp;/&nbsp; Quaternions and Octonions</div>
+      <h1>四元数と八元数<br>コード集</h1>
+      <p class="lead">複素数の先にある「数」。複素数と平面の回転から、ハミルトンの i² = j² = k² = ijk = −1、交換しない掛け算、ノルムと逆元、回転を表す q v q*、ジンバルロック、slerp、ベルトのトリック（二重被覆）、アークボール、角速度の積分、4 次元の回転とホップの円、四元数のジュリア集合、ケーリー-ディクソン構成とファノ平面の八元数まで。四元数と八元数の計算は全部自分で書き、起動時の自己テストで答えを確かめています。</p>
+      <div class="actions">
+        <a class="btn primary" href="https://editor.p5js.org/" target="_blank" rel="noopener">p5.js Web Editor を開く →</a>
+        <a class="btn" id="zip" href="#">ZIP でダウンロード</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="howto">
+      <div><span>01</span>番号を開いて<b>「コードをコピー」</b></div>
+      <div><span>02</span>エディタの <b>sketch.js</b> を全部消して貼り付け</div>
+      <div><span>03</span>左上の <b>▶</b> で実行</div>
+      <div><span>04</span>どれも<b>一番下の「四元数の道具」まで</b>全部コピー。音（14）はまずクリック、音量は小さめから</div>
+    </div>
+
+    <div id="list"></div>
+
+    <footer>p5.js Interactive Art Workshop — Series 57: Quaternions and Octonions — MIT License. 自由に改造して使ってください。</footer>
+  </div>
+
+  <script>
+    const REPO = 'r-shibusawa/p5-interactive-art';
+    document.getElementById('zip').href = `https://github.com/${REPO}/archive/refs/heads/main.zip`;
+
+    const GROUPS = [
+      { no: 'STEP 1', title: '複素数から四元数へ', items: [
+        { id: '00_complex_rotation', title: '複素数と平面の回転', desc: 'w を掛けると arg w だけ回って |w| 倍。e^{iθ} を級数で計算、掛ける順番を変えても同じ（交換法則）' },
+        { id: '01_hamilton_rules', title: 'ハミルトンの発見', desc: '1, i, j, k の掛け算表を計算。i² = j² = k² = ijk = −1、ij = k なのに ji = −k。ブルーム橋（1843）' },
+        { id: '02_noncommutative', title: '掛け算が交換しない', desc: 'スライダで p, q を作る。積の中に内積と外積、pq − qp = 2(p⃗ × q⃗)' },
+        { id: '03_norm_inverse', title: 'ノルムと逆元・単位四元数', desc: '|pq| = |p||q|、q⁻¹ = q*/|q|²。単位四元数は 3 次元球面 S³。オイラーの 4 平方恒等式' },
+      ]},
+      { no: 'STEP 2', title: '四元数と回転', items: [
+        { id: '04_rotation_qvq', title: '回転は q v q*', desc: 'q = cos(θ/2) + sin(θ/2) n で物体を回し、同じ q から作った回転行列と一致。θ/2 の意味', tags: ['3D'] },
+        { id: '05_gimbal_lock', title: 'オイラー角とジンバルロック', desc: '3 つのリング。ピッチ 90° でヤコビアンの階数が 3 → 2。四元数なら問題なし', tags: ['3D'] },
+        { id: '06_slerp', title: '球面線形補間（slerp）', desc: 'lerp と slerp で姿勢を補間して角速度をグラフに。slerp は一定、q と −q の近い方の道' },
+        { id: '07_double_cover', title: '二重被覆とベルトのトリック', desc: '360° ではベルトのねじれが取れず、720° で取れる。q と −q は同じ回転', tags: ['3D'] },
+      ]},
+      { no: 'STEP 3', title: '四元数を使う', items: [
+        { id: '08_trackball', title: '3D の物体操作（アークボール）', desc: 'ドラッグを四元数で積み重ねる。行列を掛け続けた場合の直交からのずれと比べる', tags: ['3D'] },
+        { id: '09_angular_velocity', title: '角速度の積分', desc: 'q̇ = ½ q ω を RK4 で。オイラー角での積分と並べ、ピッチ 90° 付近の誤差をグラフで比較', tags: ['3D'] },
+        { id: '10_four_d_rotation', title: '4 次元の回転', desc: 'テッセラクトを x ↦ p x q で回して投影。等傾回転と単純な回転、ホップの円', tags: ['3D'] },
+        { id: '11_quaternion_julia', title: '四元数のジュリア集合', desc: 'z ← z² + c を四元数で。3 次元の切り口を距離推定のレイマーチングで少しずつ描く' },
+      ]},
+      { no: 'STEP 4', title: '八元数とその先', items: [
+        { id: '12_cayley_dickson', title: 'ケーリー-ディクソン構成', desc: '実数 → 複素数 → 四元数 → 八元数 → 十六元数。各段で失う性質を計算、十六元数の零因子をさがす' },
+        { id: '13_octonion_fano', title: '八元数とファノ平面', desc: 'e1〜e7 の掛け算を 7 本の向き付きの線で。(ab)c ≠ a(bc)、アルティンの定理、|ab| = |a||b|' },
+      ]},
+      { no: 'STEP 5', title: '音・自由制作', items: [
+        { id: '14_rotation_sound', title: '回転の音', desc: '単位四元数の 4 成分を 4 つの声に。slerp で和音がなめらかに変わる、q と −q で音がちがう', tags: ['SOUND'] },
+      ]},
+      { no: 'EXTRA', title: '発展編', items: [
+        { id: '15_webcam_quaternion', title: 'カメラ映像を 3D で回す', desc: '映像を立方体に貼ってアークボールで回す。画素の色を q (rgb) q* で回す「色の回転」', tags: ['CAMERA', '3D'] },
+      ]},
+    ];
+
+    const list = document.getElementById('list');
+    for (const g of GROUPS) {
+      const sec = document.createElement('section');
+      sec.className = 'group';
+      sec.innerHTML = `<div class="group-head"><span class="no">${g.no}</span><h2>${g.title}</h2></div>` +
+        (g.note ? `<p class="group-note">${g.note}</p>` : '');
+      for (const s of g.items) sec.appendChild(makeItem(s));
+      list.appendChild(sec);
+    }
+
+    function makeItem(s) {
+      const path = `sketches/${s.id}/sketch.js`;
+      const d = document.createElement('details');
+      d.innerHTML = `
+        <summary>
+          <span class="num">${s.id.slice(0, 2)}</span>
+          <span><span class="title">${s.title}</span><span class="desc">${s.desc}</span></span>
+          <span class="tags">${(s.tags || []).map(t => `<span class="tag">${t}</span>`).join('')}</span>
+          <span class="chev">+</span>
+        </summary>
+        <div class="body">
+          <div class="toolbar">
+            <button class="btn small primary copy">コードをコピー</button>
+            <a class="btn small" href="sketches/${s.id}/index.html" target="_blank" rel="noopener">動かしてみる ↗</a>
+            <a class="btn small" href="https://github.com/${REPO}/blob/main/series57/${path}" target="_blank" rel="noopener">GitHub</a>
+          </div>
+          <pre><code>読み込み中…</code></pre>
+        </div>`;
+      const code = d.querySelector('code');
+      const btn = d.querySelector('.copy');
+      let text = '';
+      fetch(path)
+        .then(r => r.text())
+        .then(t => { text = t; code.textContent = t; })
+        .catch(() => { code.textContent = '読み込みに失敗しました。「GitHub」から開いてください。'; });
+      btn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch (e) {
+          const ta = document.createElement('textarea');
+          ta.value = text; document.body.appendChild(ta); ta.select();
+          document.execCommand('copy'); ta.remove();
+        }
+        btn.textContent = 'コピーしました';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'コードをコピー'; btn.classList.remove('copied'); }, 1500);
+      });
+      return d;
+    }
+  </script>
+</body>
+</html>
