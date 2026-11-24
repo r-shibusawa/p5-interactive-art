@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>シリーズ65 マルコフ連鎖 ─ p5.js コード集</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+JP:wght@400;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #000; --fg: #ededed; --muted: #8a8a8a; --dim: #555; --line: #1e1e1e; --panel: #0b0b0b;
+      --accent: #ff7a4d;
+      --sans: 'Inter', 'Noto Sans JP', system-ui, sans-serif;
+      --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--sans); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; }
+    .wrap { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+
+    header { padding: 96px 0 64px; border-bottom: 1px solid var(--line); }
+    .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase; }
+    .eyebrow b { color: var(--accent); font-weight: 600; }
+    h1 { font-size: clamp(36px, 7vw, 72px); line-height: 1.1; font-weight: 900; letter-spacing: -0.02em; margin: 20px 0 20px; }
+    .lead { color: var(--muted); margin: 0 0 36px; max-width: 34em; }
+    .actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; font: 600 14px var(--sans); text-decoration: none; border: 1px solid var(--fg); color: var(--fg); background: transparent; cursor: pointer; border-radius: 0; transition: background .15s, color .15s; }
+    .btn:hover { background: var(--fg); color: var(--bg); }
+    .btn.primary { background: var(--accent); border-color: var(--accent); color: #000; }
+    .btn.primary:hover { background: #fff; border-color: #fff; }
+    .btn.small { padding: 7px 14px; font-size: 13px; }
+
+    .howto { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--line); }
+    .howto div { padding: 28px 20px 28px 0; font-size: 14px; color: var(--muted); }
+    .howto div + div { padding-left: 20px; border-left: 1px solid var(--line); }
+    .howto span { display: block; font-family: var(--mono); color: var(--accent); font-size: 12px; margin-bottom: 8px; }
+    .howto b { color: var(--fg); font-weight: 700; }
+    @media (max-width: 720px) { .howto { grid-template-columns: 1fr 1fr; } .howto div:nth-child(3) { padding-left: 0; border-left: none; } }
+
+    .group { margin-top: 72px; }
+    .group-head { display: flex; align-items: baseline; gap: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--fg); }
+    .group-head .no { font-family: var(--mono); font-size: 12px; color: var(--accent); letter-spacing: 0.12em; }
+    .group-head h2 { margin: 0; font-size: 20px; font-weight: 800; }
+    .group-note { color: var(--muted); font-size: 14px; margin: 14px 0 0; }
+
+    details { border-bottom: 1px solid var(--line); }
+    summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 56px 1fr auto 20px; gap: 16px; align-items: center; padding: 20px 0; }
+    summary::-webkit-details-marker { display: none; }
+    summary:hover .title { color: var(--accent); }
+    .num { font-family: var(--mono); font-size: 14px; color: var(--dim); }
+    .title { font-weight: 700; font-size: 16px; transition: color .15s; }
+    .desc { display: block; color: var(--muted); font-size: 13px; font-weight: 400; }
+    .tags { display: flex; gap: 6px; }
+    .tag { font-family: var(--mono); font-size: 11px; color: var(--muted); border: 1px solid #333; padding: 1px 8px; letter-spacing: 0.06em; }
+    .chev { font-family: var(--mono); color: var(--dim); transition: transform .2s; }
+    details[open] .chev { transform: rotate(45deg); color: var(--accent); }
+    @media (max-width: 640px) { summary { grid-template-columns: 40px 1fr 16px; } .tags { display: none; } }
+
+    .body { padding: 0 0 24px 72px; }
+    @media (max-width: 640px) { .body { padding-left: 0; } }
+    .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+    pre { margin: 0; background: var(--panel); border: 1px solid var(--line); padding: 18px 20px; overflow: auto; max-height: 520px; font: 13px/1.6 var(--mono); color: #d8d8d8; }
+    .copied { background: var(--accent) !important; border-color: var(--accent) !important; color: #000 !important; }
+
+    footer { margin: 96px 0 0; padding: 32px 0 48px; border-top: 1px solid var(--line); color: var(--dim); font: 12px var(--mono); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="eyebrow"><a href="../" style="text-decoration:none;color:var(--muted)">← SERIES</a> &nbsp;/&nbsp; <b>SERIES 65</b> &nbsp;/&nbsp; Markov Chains</div>
+      <h1>マルコフ連鎖<br>コード集</h1>
+      <p class="lead">「次にどうなるかは、今の状態だけで決まる」確率の動き。天気の連鎖と遷移行列、n ステップ後の分布と定常分布、状態の分類、ギャンブラーの破産とすごろくの平均手数、グラフ上のランダムウォーク、トランプを何回切ればよいか、文字の n-gram で文章生成、隠れマルコフモデル、連続時間マルコフ連鎖、メトロポリス法とギブスサンプリング、エーレンフェストの壺、その場で学ぶマルコフ音楽とカメラ映像の模様まで。どのスケッチも行列の計算とシミュレーションを本当に行い、起動時の自己テストで答えを確かめています。</p>
+      <div class="actions">
+        <a class="btn primary" href="https://editor.p5js.org/" target="_blank" rel="noopener">p5.js Web Editor を開く →</a>
+        <a class="btn" id="zip" href="#">ZIP でダウンロード</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="howto">
+      <div><span>01</span>番号を開いて<b>「コードをコピー」</b></div>
+      <div><span>02</span>エディタの <b>sketch.js</b> を全部消して貼り付け</div>
+      <div><span>03</span>左上の <b>▶</b> で実行</div>
+      <div><span>04</span>どれも<b>一番下の「マルコフ連鎖の道具」まで</b>全部コピー。まずキャンバスをクリック。音（14）は音量を小さめから</div>
+    </div>
+
+    <div id="list"></div>
+
+    <footer>p5.js Interactive Art Workshop — Series 65: Markov Chains — MIT License. 自由に改造して使ってください。</footer>
+  </div>
+
+  <script>
+    const REPO = 'r-shibusawa/p5-interactive-art';
+    document.getElementById('zip').href = `https://github.com/${REPO}/archive/refs/heads/main.zip`;
+
+    const GROUPS = [
+      { no: 'STEP 1', title: '遷移と行列', items: [
+        { id: '00_weather_chain', title: '天気のマルコフ連鎖', desc: '晴れ・くもり・雨の遷移図と遷移行列。矢印の確率をドラッグで変え、サイコロで 1 日ずつ進めてカレンダーに並べる' },
+        { id: '01_n_step', title: 'n ステップ後の分布', desc: '分布に P を掛けていく棒グラフ。P^n の行がそろっていく様子と、P^(m+n) = P^m P^n の数値での確認' },
+        { id: '02_stationary', title: '定常分布', desc: 'π P = π を連立方程式・べき乗法・長いシミュレーションの 3 つで求めて一致を確認。固有値 1 の固有ベクトル' },
+        { id: '03_classification', title: '状態の分類', desc: '自分で作った遷移図を、通じ合うクラス・吸収状態・周期・既約かどうかで自動判定して色分け' },
+      ]},
+      { no: 'STEP 2', title: '到達と吸収', items: [
+        { id: '04_gamblers_ruin', title: 'ギャンブラーの破産', desc: '破産の確率と平均ゲーム数を、公式・基本行列・1 万回のシミュレーションで比較。少し不利なだけで破産がほぼ確実に' },
+        { id: '05_snakes_ladders', title: 'すごろくの平均手数', desc: 'オリジナルの 30 マスのすごろくを吸収マルコフ連鎖に。基本行列 N = (I − Q)⁻¹ で平均手数を正確に計算' },
+        { id: '06_graph_random_walk', title: 'グラフ上のランダムウォーク', desc: '滞在割合は次数に比例（π ∝ 次数）、詳細つり合い、全部の頂点を訪れるまでのカバー時間' },
+        { id: '07_card_shuffle', title: 'トランプは何回切ればよい？', desc: 'リフルシャッフルの全変動距離を上昇列の式で 52 枚ぴったり計算。7 回前後で急に混ざるカットオフ' },
+      ]},
+      { no: 'STEP 3', title: '生成と推定', items: [
+        { id: '08_ngram_text', title: '文字の n-gram で文章生成', desc: '自作の文章から直前 k 文字 → 次の文字の確率を学んで文章を生成。次数を上げると本物らしく、でもコピーが増える。エントロピー率' },
+        { id: '09_hmm_forward_backward', title: '隠れマルコフモデル', desc: 'いかさまカジノ：出た目だけから、前向き・後ろ向きアルゴリズムで各回の「いかさまサイコロだった確率」を計算' },
+        { id: '10_continuous_time', title: '連続時間マルコフ連鎖', desc: '機械の稼働・点検・故障・修理。指数分布の待ち時間、生成行列 Q、一様化で求める時刻 t の分布と定常分布' },
+      ]},
+      { no: 'STEP 4', title: 'マルコフ連鎖モンテカルロ', items: [
+        { id: '11_metropolis_hastings', title: 'メトロポリス-ヘイスティングス法', desc: '山が 2 つの分布から提案の幅を変えてサンプリング。採択率、ヒストグラムと等高線、自己相関と有効サンプル数' },
+        { id: '12_gibbs_sampling', title: 'ギブスサンプリング', desc: '1 変数ずつ条件付き分布から引く階段の軌跡。相関が強いとゆっくり。白黒画像のノイズ除去にも' },
+        { id: '13_ehrenfest_urn', title: 'エーレンフェストの壺', desc: '玉を 1 個ずつ移すと 2 項分布へ。全部が片方に戻るまで平均 2^N 回（カックの公式）、不可逆性へのつながり' },
+      ]},
+      { no: 'STEP 5', title: '音・自由制作', items: [
+        { id: '14_live_markov_music', title: 'その場で学ぶマルコフ音楽', desc: 'キーボードで弾いた音の並びから遷移行列をその場で学び、連鎖に即興させる。定常分布とエントロピー率が見える', tags: ['SOUND'] },
+      ]},
+      { no: 'EXTRA', title: '発展編', items: [
+        { id: '15_webcam_markov_texture', title: 'カメラ映像のマルコフ模様', desc: '映像を 8 色に減らし、となりの色の遷移確率を数えて、同じ雰囲気の新しい模様をマルコフ連鎖で作る', tags: ['CAMERA'] },
+      ]},
+    ];
+
+    const list = document.getElementById('list');
+    for (const g of GROUPS) {
+      const sec = document.createElement('section');
+      sec.className = 'group';
+      sec.innerHTML = `<div class="group-head"><span class="no">${g.no}</span><h2>${g.title}</h2></div>` +
+        (g.note ? `<p class="group-note">${g.note}</p>` : '');
+      for (const s of g.items) sec.appendChild(makeItem(s));
+      list.appendChild(sec);
+    }
+
+    function makeItem(s) {
+      const path = `sketches/${s.id}/sketch.js`;
+      const d = document.createElement('details');
+      d.innerHTML = `
+        <summary>
+          <span class="num">${s.id.slice(0, 2)}</span>
+          <span><span class="title">${s.title}</span><span class="desc">${s.desc}</span></span>
+          <span class="tags">${(s.tags || []).map(t => `<span class="tag">${t}</span>`).join('')}</span>
+          <span class="chev">+</span>
+        </summary>
+        <div class="body">
+          <div class="toolbar">
+            <button class="btn small primary copy">コードをコピー</button>
+            <a class="btn small" href="sketches/${s.id}/index.html" target="_blank" rel="noopener">動かしてみる ↗</a>
+            <a class="btn small" href="https://github.com/${REPO}/blob/main/series65/${path}" target="_blank" rel="noopener">GitHub</a>
+          </div>
+          <pre><code>読み込み中…</code></pre>
+        </div>`;
+      const code = d.querySelector('code');
+      const btn = d.querySelector('.copy');
+      let text = '';
+      fetch(path)
+        .then(r => r.text())
+        .then(t => { text = t; code.textContent = t; })
+        .catch(() => { code.textContent = '読み込みに失敗しました。「GitHub」から開いてください。'; });
+      btn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch (e) {
+          const ta = document.createElement('textarea');
+          ta.value = text; document.body.appendChild(ta); ta.select();
+          document.execCommand('copy'); ta.remove();
+        }
+        btn.textContent = 'コピーしました';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'コードをコピー'; btn.classList.remove('copied'); }, 1500);
+      });
+      return d;
+    }
+  </script>
+</body>
+</html>

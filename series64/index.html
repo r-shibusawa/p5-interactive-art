@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>シリーズ64 アンサンブル学習 ─ p5.js コード集</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+JP:wght@400;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #000; --fg: #ededed; --muted: #8a8a8a; --dim: #555; --line: #1e1e1e; --panel: #0b0b0b;
+      --accent: #d9a44a;
+      --sans: 'Inter', 'Noto Sans JP', system-ui, sans-serif;
+      --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--sans); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; }
+    .wrap { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+
+    header { padding: 96px 0 64px; border-bottom: 1px solid var(--line); }
+    .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase; }
+    .eyebrow b { color: var(--accent); font-weight: 600; }
+    h1 { font-size: clamp(36px, 7vw, 72px); line-height: 1.1; font-weight: 900; letter-spacing: -0.02em; margin: 20px 0 20px; }
+    .lead { color: var(--muted); margin: 0 0 36px; max-width: 34em; }
+    .actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; font: 600 14px var(--sans); text-decoration: none; border: 1px solid var(--fg); color: var(--fg); background: transparent; cursor: pointer; border-radius: 0; transition: background .15s, color .15s; }
+    .btn:hover { background: var(--fg); color: var(--bg); }
+    .btn.primary { background: var(--accent); border-color: var(--accent); color: #000; }
+    .btn.primary:hover { background: #fff; border-color: #fff; }
+    .btn.small { padding: 7px 14px; font-size: 13px; }
+
+    .howto { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--line); }
+    .howto div { padding: 28px 20px 28px 0; font-size: 14px; color: var(--muted); }
+    .howto div + div { padding-left: 20px; border-left: 1px solid var(--line); }
+    .howto span { display: block; font-family: var(--mono); color: var(--accent); font-size: 12px; margin-bottom: 8px; }
+    .howto b { color: var(--fg); font-weight: 700; }
+    @media (max-width: 720px) { .howto { grid-template-columns: 1fr 1fr; } .howto div:nth-child(3) { padding-left: 0; border-left: none; } }
+
+    .group { margin-top: 72px; }
+    .group-head { display: flex; align-items: baseline; gap: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--fg); }
+    .group-head .no { font-family: var(--mono); font-size: 12px; color: var(--accent); letter-spacing: 0.12em; }
+    .group-head h2 { margin: 0; font-size: 20px; font-weight: 800; }
+    .group-note { color: var(--muted); font-size: 14px; margin: 14px 0 0; }
+
+    details { border-bottom: 1px solid var(--line); }
+    summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 56px 1fr auto 20px; gap: 16px; align-items: center; padding: 20px 0; }
+    summary::-webkit-details-marker { display: none; }
+    summary:hover .title { color: var(--accent); }
+    .num { font-family: var(--mono); font-size: 14px; color: var(--dim); }
+    .title { font-weight: 700; font-size: 16px; transition: color .15s; }
+    .desc { display: block; color: var(--muted); font-size: 13px; font-weight: 400; }
+    .tags { display: flex; gap: 6px; }
+    .tag { font-family: var(--mono); font-size: 11px; color: var(--muted); border: 1px solid #333; padding: 1px 8px; letter-spacing: 0.06em; }
+    .chev { font-family: var(--mono); color: var(--dim); transition: transform .2s; }
+    details[open] .chev { transform: rotate(45deg); color: var(--accent); }
+    @media (max-width: 640px) { summary { grid-template-columns: 40px 1fr 16px; } .tags { display: none; } }
+
+    .body { padding: 0 0 24px 72px; }
+    @media (max-width: 640px) { .body { padding-left: 0; } }
+    .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+    pre { margin: 0; background: var(--panel); border: 1px solid var(--line); padding: 18px 20px; overflow: auto; max-height: 520px; font: 13px/1.6 var(--mono); color: #d8d8d8; }
+    .copied { background: var(--accent) !important; border-color: var(--accent) !important; color: #000 !important; }
+
+    footer { margin: 96px 0 0; padding: 32px 0 48px; border-top: 1px solid var(--line); color: var(--dim); font: 12px var(--mono); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="eyebrow"><a href="../" style="text-decoration:none;color:var(--muted)">← SERIES</a> &nbsp;/&nbsp; <b>SERIES 64</b> &nbsp;/&nbsp; Ensemble Learning</div>
+      <h1>アンサンブル学習<br>コード集</h1>
+      <p class="lead">1 つの賢いモデルより、ちがうモデルをたくさん組み合わせる。集合知と多様性予測定理、コンドルセの陪審定理、バイアスとバリアンス、相関のある平均の限界から始めて、ちがう種類のモデルの投票、重み付き平均、スタッキング、専門家の混合、マージンと 2 次のブースティング、ランダム化と多様性の測り方、Isolation Forest、アンサンブルで測る「自信のなさ」、合唱とカメラの重み付き多数決まで。どのスケッチも機械学習ライブラリなしで本当に計算し、起動時の自己テストで答えを確かめています。</p>
+      <div class="actions">
+        <a class="btn primary" href="https://editor.p5js.org/" target="_blank" rel="noopener">p5.js Web Editor を開く →</a>
+        <a class="btn" id="zip" href="#">ZIP でダウンロード</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="howto">
+      <div><span>01</span>番号を開いて<b>「コードをコピー」</b></div>
+      <div><span>02</span>エディタの <b>sketch.js</b> を全部消して貼り付け</div>
+      <div><span>03</span>左上の <b>▶</b> で実行</div>
+      <div><span>04</span>どれも<b>一番下の「アンサンブル学習の道具」まで</b>全部コピー。音（14）はまずクリック、音量は小さめから</div>
+    </div>
+
+    <div id="list"></div>
+
+    <footer>p5.js Interactive Art Workshop — Series 64: Ensemble Learning — MIT License. 自由に改造して使ってください。</footer>
+  </div>
+
+  <script>
+    const REPO = 'r-shibusawa/p5-interactive-art';
+    document.getElementById('zip').href = `https://github.com/${REPO}/archive/refs/heads/main.zip`;
+
+    const GROUPS = [
+      { no: 'STEP 1', title: 'なぜうまくいくか', items: [
+        { id: '00_wisdom_of_crowds', title: '集合知と多様性予測定理', desc: 'ビンの中の玉の数を 200 人が推測。集団の誤差 = 個人の誤差の平均 − 多様性が毎回ぴったり成り立つ。共通の偏りは消えない' },
+        { id: '01_condorcet_jury', title: 'コンドルセの陪審定理', desc: '正解率 p の n 人の多数決を 2 項分布で正確に計算。まねっこ（相関）を入れると、人数を増やしても伸びない' },
+        { id: '02_bias_variance', title: 'バイアスとバリアンス', desc: 'sin + ノイズに多項式を 100 回あてはめる。バイアス² + バリアンス + ノイズ = 期待誤差。不安定な次数ではバギングが効く' },
+        { id: '03_correlation_limits', title: '相関があると平均は効きにくい', desc: 'n 個の予測の平均の分散 ρσ² + (1 − ρ)σ²/n を式とシミュレーションで。いくら集めても ρσ² より下がらない' },
+      ]},
+      { no: 'STEP 2', title: '組み合わせ方', items: [
+        { id: '04_voting_heterogeneous', title: 'ちがう種類のモデルの投票', desc: 'k 近傍法・ロジスティック回帰・ナイーブベイズ・ニューラルネット・切り株。ハード投票とソフト投票、31 通りの組合せ' },
+        { id: '05_weighted_average', title: '重み付き平均', desc: '和 = 1・≥ 0 の重みを検証データで、射影勾配法で探す。重みの三角形の上の誤差の地形、コピーを入れたときの重み' },
+        { id: '06_stacking', title: 'スタッキング', desc: '5 分割の「見ていないデータでの予測」でメタ学習器を学習。訓練データでそのまま予測すると 1 近傍法を信じすぎる' },
+        { id: '07_mixture_of_experts', title: '専門家の混合', desc: '場所で規則が変わるデータ。ソフトマックスのゲートが「誰に任せるか」を学び、専門家はそれぞれの区間だけを学ぶ' },
+      ]},
+      { no: 'STEP 3', title: 'ブースティングと多様性を深く', items: [
+        { id: '08_margins', title: 'マージンで見るブースティング', desc: '切り株のブースティングのマージンの累積分布。訓練誤差 0 のあとも最小マージンは広がり続ける' },
+        { id: '09_newton_boosting', title: '2 次の勾配ブースティング', desc: '勾配とヘッセで葉の値 −G/(H + λ) と分割の利得（λ, γ つき）。1 次との損失の下がり方の比較' },
+        { id: '10_randomization_diversity', title: 'ランダム化と多様性', desc: 'バギング・ランダム部分空間・Extra Trees の κ-誤差図。でたらめを強くすると 1 本は弱く、多数決は強いまま' },
+        { id: '11_diversity_measures', title: '多様性の測り方', desc: '不一致率・Q 統計量・相関 ρ の表。同じまちがいをするコピーを集めても多数決は伸びない' },
+      ]},
+      { no: 'STEP 4', title: '使ってみる', items: [
+        { id: '12_isolation_forest', title: 'Isolation Forest で異常検知', desc: 'ランダムに切ると外れた点ほど早く孤立する。平均の経路長と異常スコア 2^(−E[h]/c(n)) の地図。クリックで点を足す' },
+        { id: '13_ensemble_uncertainty', title: 'アンサンブルで自信のなさを測る', desc: '種だけちがう 8 個のニューラルネット。データのない所で予測がばらつく = 自信がない。クリックで点を足す' },
+      ]},
+      { no: 'STEP 5', title: '音・自由制作', items: [
+        { id: '14_ensemble_choir', title: 'アンサンブルの合唱', desc: '5 つのモデルが 5 人の歌い手。意見がそろうと長三和音、割れると不協和音。低音 = 多数決', tags: ['SOUND'] },
+      ]},
+      { no: 'EXTRA', title: '発展編', items: [
+        { id: '15_webcam_weighted_majority', title: 'カメラ映像で重み付き多数決', desc: '明るさ・赤み・動き・エッジなど 6 つの検出器の投票。クリックで正解を教えると、まちがえた検出器の重みが減る', tags: ['CAMERA'] },
+      ]},
+    ];
+
+    const list = document.getElementById('list');
+    for (const g of GROUPS) {
+      const sec = document.createElement('section');
+      sec.className = 'group';
+      sec.innerHTML = `<div class="group-head"><span class="no">${g.no}</span><h2>${g.title}</h2></div>` +
+        (g.note ? `<p class="group-note">${g.note}</p>` : '');
+      for (const s of g.items) sec.appendChild(makeItem(s));
+      list.appendChild(sec);
+    }
+
+    function makeItem(s) {
+      const path = `sketches/${s.id}/sketch.js`;
+      const d = document.createElement('details');
+      d.innerHTML = `
+        <summary>
+          <span class="num">${s.id.slice(0, 2)}</span>
+          <span><span class="title">${s.title}</span><span class="desc">${s.desc}</span></span>
+          <span class="tags">${(s.tags || []).map(t => `<span class="tag">${t}</span>`).join('')}</span>
+          <span class="chev">+</span>
+        </summary>
+        <div class="body">
+          <div class="toolbar">
+            <button class="btn small primary copy">コードをコピー</button>
+            <a class="btn small" href="sketches/${s.id}/index.html" target="_blank" rel="noopener">動かしてみる ↗</a>
+            <a class="btn small" href="https://github.com/${REPO}/blob/main/series64/${path}" target="_blank" rel="noopener">GitHub</a>
+          </div>
+          <pre><code>読み込み中…</code></pre>
+        </div>`;
+      const code = d.querySelector('code');
+      const btn = d.querySelector('.copy');
+      let text = '';
+      fetch(path)
+        .then(r => r.text())
+        .then(t => { text = t; code.textContent = t; })
+        .catch(() => { code.textContent = '読み込みに失敗しました。「GitHub」から開いてください。'; });
+      btn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch (e) {
+          const ta = document.createElement('textarea');
+          ta.value = text; document.body.appendChild(ta); ta.select();
+          document.execCommand('copy'); ta.remove();
+        }
+        btn.textContent = 'コピーしました';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'コードをコピー'; btn.classList.remove('copied'); }, 1500);
+      });
+      return d;
+    }
+  </script>
+</body>
+</html>

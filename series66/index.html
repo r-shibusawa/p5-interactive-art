@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>シリーズ66 オートマトン ─ p5.js コード集</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+JP:wght@400;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #000; --fg: #ededed; --muted: #8a8a8a; --dim: #555; --line: #1e1e1e; --panel: #0b0b0b;
+      --accent: #2fb6c8;
+      --sans: 'Inter', 'Noto Sans JP', system-ui, sans-serif;
+      --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--sans); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; }
+    .wrap { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+
+    header { padding: 96px 0 64px; border-bottom: 1px solid var(--line); }
+    .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase; }
+    .eyebrow b { color: var(--accent); font-weight: 600; }
+    h1 { font-size: clamp(36px, 7vw, 72px); line-height: 1.1; font-weight: 900; letter-spacing: -0.02em; margin: 20px 0 20px; }
+    .lead { color: var(--muted); margin: 0 0 36px; max-width: 34em; }
+    .actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; font: 600 14px var(--sans); text-decoration: none; border: 1px solid var(--fg); color: var(--fg); background: transparent; cursor: pointer; border-radius: 0; transition: background .15s, color .15s; }
+    .btn:hover { background: var(--fg); color: var(--bg); }
+    .btn.primary { background: var(--accent); border-color: var(--accent); color: #000; }
+    .btn.primary:hover { background: #fff; border-color: #fff; }
+    .btn.small { padding: 7px 14px; font-size: 13px; }
+
+    .howto { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--line); }
+    .howto div { padding: 28px 20px 28px 0; font-size: 14px; color: var(--muted); }
+    .howto div + div { padding-left: 20px; border-left: 1px solid var(--line); }
+    .howto span { display: block; font-family: var(--mono); color: var(--accent); font-size: 12px; margin-bottom: 8px; }
+    .howto b { color: var(--fg); font-weight: 700; }
+    @media (max-width: 720px) { .howto { grid-template-columns: 1fr 1fr; } .howto div:nth-child(3) { padding-left: 0; border-left: none; } }
+
+    .group { margin-top: 72px; }
+    .group-head { display: flex; align-items: baseline; gap: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--fg); }
+    .group-head .no { font-family: var(--mono); font-size: 12px; color: var(--accent); letter-spacing: 0.12em; }
+    .group-head h2 { margin: 0; font-size: 20px; font-weight: 800; }
+    .group-note { color: var(--muted); font-size: 14px; margin: 14px 0 0; }
+
+    details { border-bottom: 1px solid var(--line); }
+    summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 56px 1fr auto 20px; gap: 16px; align-items: center; padding: 20px 0; }
+    summary::-webkit-details-marker { display: none; }
+    summary:hover .title { color: var(--accent); }
+    .num { font-family: var(--mono); font-size: 14px; color: var(--dim); }
+    .title { font-weight: 700; font-size: 16px; transition: color .15s; }
+    .desc { display: block; color: var(--muted); font-size: 13px; font-weight: 400; }
+    .tags { display: flex; gap: 6px; }
+    .tag { font-family: var(--mono); font-size: 11px; color: var(--muted); border: 1px solid #333; padding: 1px 8px; letter-spacing: 0.06em; }
+    .chev { font-family: var(--mono); color: var(--dim); transition: transform .2s; }
+    details[open] .chev { transform: rotate(45deg); color: var(--accent); }
+    @media (max-width: 640px) { summary { grid-template-columns: 40px 1fr 16px; } .tags { display: none; } }
+
+    .body { padding: 0 0 24px 72px; }
+    @media (max-width: 640px) { .body { padding-left: 0; } }
+    .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+    pre { margin: 0; background: var(--panel); border: 1px solid var(--line); padding: 18px 20px; overflow: auto; max-height: 520px; font: 13px/1.6 var(--mono); color: #d8d8d8; }
+    .copied { background: var(--accent) !important; border-color: var(--accent) !important; color: #000 !important; }
+
+    footer { margin: 96px 0 0; padding: 32px 0 48px; border-top: 1px solid var(--line); color: var(--dim); font: 12px var(--mono); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="eyebrow"><a href="../" style="text-decoration:none;color:var(--muted)">← SERIES</a> &nbsp;/&nbsp; <b>SERIES 66</b> &nbsp;/&nbsp; Automata</div>
+      <h1>オートマトン<br>コード集</h1>
+      <p class="lead">状態と遷移だけでできた「計算する機械」。自動販売機と信号機の状態機械、DFA の設計、NFA と部分集合構成、最小化、正規表現から NFA へ、積の構成と言語の演算、ポンピング補題ゲーム、字句解析器、プッシュダウンオートマトンとかっこ、文脈自由文法と CYK 構文解析、チューリング機械と忙しいビーバー、ゲームの敵キャラの状態機械、エイホ-コラシック法、音とカメラまで。どのスケッチもライブラリなしで本当に計算し、起動時の自己テストで答えを確かめています。</p>
+      <div class="actions">
+        <a class="btn primary" href="https://editor.p5js.org/" target="_blank" rel="noopener">p5.js Web Editor を開く →</a>
+        <a class="btn" id="zip" href="#">ZIP でダウンロード</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="howto">
+      <div><span>01</span>番号を開いて<b>「コードをコピー」</b></div>
+      <div><span>02</span>エディタの <b>sketch.js</b> を全部消して貼り付け</div>
+      <div><span>03</span>左上の <b>▶</b> で実行</div>
+      <div><span>04</span>どれも<b>一番下の「オートマトンの道具」まで</b>全部コピー。07・13 は Tab で編集モード（04 は Tab で入力欄の切りかえ）。音（14）はまずクリック、音量は小さめから</div>
+    </div>
+
+    <div id="list"></div>
+
+    <footer>p5.js Interactive Art Workshop — Series 66: Automata — MIT License. 自由に改造して使ってください。</footer>
+  </div>
+
+  <script>
+    const REPO = 'r-shibusawa/p5-interactive-art';
+    document.getElementById('zip').href = `https://github.com/${REPO}/archive/refs/heads/main.zip`;
+
+    const GROUPS = [
+      { no: 'STEP 1', title: '有限オートマトン', items: [
+        { id: '00_state_machines', title: '身近な状態機械', desc: '自動販売機（10・50・100 円とおつり）はミーリー型、押しボタン式の信号機はムーア型。状態遷移図の上で動かす' },
+        { id: '01_dfa_designer', title: 'DFA を設計する', desc: 'クリックで状態、ドラッグで遷移、ダブルクリックで受理。「3 の倍数」「a が偶数」「ab を含む」を全部の文字列で答え合わせ' },
+        { id: '02_nfa_subset', title: 'NFA と部分集合構成', desc: '「最後から n 文字目が 1」の NFA を玉の集合で動かし、部分集合構成の表を 1 行ずつ。DFA は 2ⁿ 状態に' },
+        { id: '03_dfa_minimize', title: 'DFA の最小化', desc: '区別できない状態をまとめる分割の精密化を表の色で。積の BFS で同じ言語か判定し、ちがえば反例' },
+      ]},
+      { no: 'STEP 2', title: '正規表現と言語', items: [
+        { id: '04_regex_thompson', title: '正規表現から NFA へ', desc: '構文木とトンプソン構成の NFA、テキストの一致。後もどりしないので意地悪な式でも遅くならない' },
+        { id: '05_product_construction', title: '言語の演算と積の構成', desc: '2 つの DFA を同時に動かす積で ∩ ∪ − △、補集合は受理の反転。空言語の判定と一番短い例' },
+        { id: '06_pumping_game', title: 'ポンピング補題ゲーム', desc: 'コンピュータとのゲームで aⁿbⁿ・回文・平方数の長さが正規言語でないことを確かめる。a*b* には勝てない' },
+        { id: '07_lexer', title: '字句解析器', desc: '数・名前・キーワード・演算子・コメントを DFA の最長一致で切り出して色分け。エラー文字の扱い' },
+      ]},
+      { no: 'STEP 3', title: 'もっと強い機械', items: [
+        { id: '08_pushdown_brackets', title: 'プッシュダウンオートマトン', desc: 'かっこの対応をスタックで判定。有限の機械では深さが数えきれない。回文は「真ん中」の推測の枝を探索' },
+        { id: '09_cfg_cyk', title: '文脈自由文法と CYK 構文解析', desc: '式の文法で CYK の表を埋めて構文木。あいまいな文法では n+n*n に木が 2 つ' },
+        { id: '10_turing_machine', title: 'チューリング機械', desc: 'テープ・ヘッド・状態表で 2 進数の 1 足し、単項の足し算、回文の判定。表を編集、テープの時空図' },
+        { id: '11_busy_beaver', title: '忙しいビーバーと停止問題', desc: '2〜4 状態の王者（4 個 6 手、6 個 14 手と 21 手、13 個 107 手）。2 状態の機械を全部分類、対角線論法' },
+      ]},
+      { no: 'STEP 4', title: 'オートマトンのひろがり', items: [
+        { id: '12_game_ai_fsm', title: 'ゲームの敵キャラの状態機械', desc: '巡回・発見・追跡・見失う・探索の外側に逃走がある階層的な状態機械。マウスのあなたを 3 体が追う' },
+        { id: '13_aho_corasick', title: 'エイホ-コラシック法', desc: 'トライと失敗リンクのオートマトンで、たくさんの単語をテキスト 1 回の読みで全部さがす' },
+      ]},
+      { no: 'STEP 5', title: '音・自由制作', items: [
+        { id: '14_automaton_rhythm', title: 'オートマトンの作曲', desc: '状態ごとに音を決め、0 と 1 の列に沿って歩くとリズムとメロディ。受理状態なら終わりの和音', tags: ['SOUND'] },
+      ]},
+      { no: 'EXTRA', title: '発展編', items: [
+        { id: '15_webcam_gesture_dfa', title: '身ぶりをオートマトンで認識', desc: '動きの向きを ← → ↑ ↓ の記号に変え、正規表現から作った DFA で「手を振る」「うなずく」を認識', tags: ['CAMERA'] },
+      ]},
+    ];
+
+    const list = document.getElementById('list');
+    for (const g of GROUPS) {
+      const sec = document.createElement('section');
+      sec.className = 'group';
+      sec.innerHTML = `<div class="group-head"><span class="no">${g.no}</span><h2>${g.title}</h2></div>` +
+        (g.note ? `<p class="group-note">${g.note}</p>` : '');
+      for (const s of g.items) sec.appendChild(makeItem(s));
+      list.appendChild(sec);
+    }
+
+    function makeItem(s) {
+      const path = `sketches/${s.id}/sketch.js`;
+      const d = document.createElement('details');
+      d.innerHTML = `
+        <summary>
+          <span class="num">${s.id.slice(0, 2)}</span>
+          <span><span class="title">${s.title}</span><span class="desc">${s.desc}</span></span>
+          <span class="tags">${(s.tags || []).map(t => `<span class="tag">${t}</span>`).join('')}</span>
+          <span class="chev">+</span>
+        </summary>
+        <div class="body">
+          <div class="toolbar">
+            <button class="btn small primary copy">コードをコピー</button>
+            <a class="btn small" href="sketches/${s.id}/index.html" target="_blank" rel="noopener">動かしてみる ↗</a>
+            <a class="btn small" href="https://github.com/${REPO}/blob/main/series66/${path}" target="_blank" rel="noopener">GitHub</a>
+          </div>
+          <pre><code>読み込み中…</code></pre>
+        </div>`;
+      const code = d.querySelector('code');
+      const btn = d.querySelector('.copy');
+      let text = '';
+      fetch(path)
+        .then(r => r.text())
+        .then(t => { text = t; code.textContent = t; })
+        .catch(() => { code.textContent = '読み込みに失敗しました。「GitHub」から開いてください。'; });
+      btn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch (e) {
+          const ta = document.createElement('textarea');
+          ta.value = text; document.body.appendChild(ta); ta.select();
+          document.execCommand('copy'); ta.remove();
+        }
+        btn.textContent = 'コピーしました';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'コードをコピー'; btn.classList.remove('copied'); }, 1500);
+      });
+      return d;
+    }
+  </script>
+</body>
+</html>
