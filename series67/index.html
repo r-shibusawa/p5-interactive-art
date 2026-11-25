@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>シリーズ67 情報幾何学 ─ p5.js コード集</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+JP:wght@400;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #000; --fg: #ededed; --muted: #8a8a8a; --dim: #555; --line: #1e1e1e; --panel: #0b0b0b;
+      --accent: #ff9248;
+      --sans: 'Inter', 'Noto Sans JP', system-ui, sans-serif;
+      --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--sans); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; }
+    .wrap { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+
+    header { padding: 96px 0 64px; border-bottom: 1px solid var(--line); }
+    .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase; }
+    .eyebrow b { color: var(--accent); font-weight: 600; }
+    h1 { font-size: clamp(36px, 7vw, 72px); line-height: 1.1; font-weight: 900; letter-spacing: -0.02em; margin: 20px 0 20px; }
+    .lead { color: var(--muted); margin: 0 0 36px; max-width: 34em; }
+    .actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; font: 600 14px var(--sans); text-decoration: none; border: 1px solid var(--fg); color: var(--fg); background: transparent; cursor: pointer; border-radius: 0; transition: background .15s, color .15s; }
+    .btn:hover { background: var(--fg); color: var(--bg); }
+    .btn.primary { background: var(--accent); border-color: var(--accent); color: #000; }
+    .btn.primary:hover { background: #fff; border-color: #fff; }
+    .btn.small { padding: 7px 14px; font-size: 13px; }
+
+    .howto { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--line); }
+    .howto div { padding: 28px 20px 28px 0; font-size: 14px; color: var(--muted); }
+    .howto div + div { padding-left: 20px; border-left: 1px solid var(--line); }
+    .howto span { display: block; font-family: var(--mono); color: var(--accent); font-size: 12px; margin-bottom: 8px; }
+    .howto b { color: var(--fg); font-weight: 700; }
+    @media (max-width: 720px) { .howto { grid-template-columns: 1fr 1fr; } .howto div:nth-child(3) { padding-left: 0; border-left: none; } }
+
+    .group { margin-top: 72px; }
+    .group-head { display: flex; align-items: baseline; gap: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--fg); }
+    .group-head .no { font-family: var(--mono); font-size: 12px; color: var(--accent); letter-spacing: 0.12em; }
+    .group-head h2 { margin: 0; font-size: 20px; font-weight: 800; }
+    .group-note { color: var(--muted); font-size: 14px; margin: 14px 0 0; }
+
+    details { border-bottom: 1px solid var(--line); }
+    summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 56px 1fr auto 20px; gap: 16px; align-items: center; padding: 20px 0; }
+    summary::-webkit-details-marker { display: none; }
+    summary:hover .title { color: var(--accent); }
+    .num { font-family: var(--mono); font-size: 14px; color: var(--dim); }
+    .title { font-weight: 700; font-size: 16px; transition: color .15s; }
+    .desc { display: block; color: var(--muted); font-size: 13px; font-weight: 400; }
+    .tags { display: flex; gap: 6px; }
+    .tag { font-family: var(--mono); font-size: 11px; color: var(--muted); border: 1px solid #333; padding: 1px 8px; letter-spacing: 0.06em; }
+    .chev { font-family: var(--mono); color: var(--dim); transition: transform .2s; }
+    details[open] .chev { transform: rotate(45deg); color: var(--accent); }
+    @media (max-width: 640px) { summary { grid-template-columns: 40px 1fr 16px; } .tags { display: none; } }
+
+    .body { padding: 0 0 24px 72px; }
+    @media (max-width: 640px) { .body { padding-left: 0; } }
+    .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+    pre { margin: 0; background: var(--panel); border: 1px solid var(--line); padding: 18px 20px; overflow: auto; max-height: 520px; font: 13px/1.6 var(--mono); color: #d8d8d8; }
+    .copied { background: var(--accent) !important; border-color: var(--accent) !important; color: #000 !important; }
+
+    footer { margin: 96px 0 0; padding: 32px 0 48px; border-top: 1px solid var(--line); color: var(--dim); font: 12px var(--mono); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="eyebrow"><a href="../" style="text-decoration:none;color:var(--muted)">← SERIES</a> &nbsp;/&nbsp; <b>SERIES 67</b> &nbsp;/&nbsp; Information Geometry</div>
+      <h1>情報幾何学<br>コード集</h1>
+      <p class="lead">確率分布を「点」と見ると、分布の集まりは曲がった空間になる。確率の三角形と KL ダイバージェンス、フィッシャー情報とクラメール-ラオの限界、双曲平面になる正規分布の族、指数型分布族の 2 つの座標、e と m の 2 種類のまっすぐ、ピタゴラスの定理と射影、ブレグマン・ダイバージェンス、自然勾配、EM 法、最大エントロピー、α-ダイバージェンス、相互情報量、球の上のフィッシャー-ラオ距離、音とカメラまで。どのスケッチもライブラリなしで本当に計算し、起動時の自己テストで答えを確かめています。</p>
+      <div class="actions">
+        <a class="btn primary" href="https://editor.p5js.org/" target="_blank" rel="noopener">p5.js Web Editor を開く →</a>
+        <a class="btn" id="zip" href="#">ZIP でダウンロード</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="howto">
+      <div><span>01</span>番号を開いて<b>「コードをコピー」</b></div>
+      <div><span>02</span>エディタの <b>sketch.js</b> を全部消して貼り付け</div>
+      <div><span>03</span>左上の <b>▶</b> で実行</div>
+      <div><span>04</span>どれも<b>一番下の「情報幾何の道具」まで</b>全部コピー。点や棒はドラッグで動く。音（14）はまずクリック、音量は小さめから</div>
+    </div>
+
+    <div id="list"></div>
+
+    <footer>p5.js Interactive Art Workshop — Series 67: Information Geometry — MIT License. 自由に改造して使ってください。</footer>
+  </div>
+
+  <script>
+    const REPO = 'r-shibusawa/p5-interactive-art';
+    document.getElementById('zip').href = `https://github.com/${REPO}/archive/refs/heads/main.zip`;
+
+    const GROUPS = [
+      { no: 'STEP 1', title: '分布の空間', items: [
+        { id: '00_probability_simplex', title: '確率の三角形', desc: '3 つの結果の確率 (p1, p2, p3) を正三角形の中の 1 点に。エントロピーの等高線、ドラッグで棒グラフとサンプル列が変わる' },
+        { id: '01_kl_divergence', title: 'KL ダイバージェンス', desc: 'D(p‖q) ≠ D(q‖p)、三角不等式も破れる。p を固定した D(p‖·) と D(·‖p) の等高線、符号化の余分なビット数' },
+        { id: '02_fisher_information', title: 'フィッシャー情報とクラメール-ラオ', desc: 'スコアの分散 = 1/(p(1−p))。コインの推定をくり返すと分散が限界 p(1−p)/n にぴったり近づく' },
+        { id: '03_gaussian_hyperbolic', title: '正規分布の族は双曲平面', desc: '(μ, σ) の上半平面とフィッシャー計量。半楕円の測地線と等距離の円、距離の公式 = 数値積分 = RK4 の測地線' },
+      ]},
+      { no: 'STEP 2', title: '双対構造', items: [
+        { id: '04_exponential_family', title: '指数型分布族', desc: 'ベルヌーイ・ポアソン・カテゴリ・正規分布の θ 座標と η = ∇ψ(θ) 座標。ψ と φ のグラフと接線、ルジャンドル変換' },
+        { id: '05_e_m_geodesics', title: '2 種類のまっすぐ', desc: '確率を混ぜる m-測地線と、対数で混ぜる e-測地線。三角形と θ 平面で、片方はまっすぐ、もう片方は曲がる' },
+        { id: '06_pythagorean_projection', title: 'ピタゴラスの定理と射影', desc: '平均を決めた集合への e-射影と、独立な表への m-射影。D(p‖r) = D(p‖q) + D(q‖r) が毎回ぴったり' },
+        { id: '07_bregman_divergence', title: 'ブレグマン・ダイバージェンス', desc: '凸関数と接線のすき間。x² なら 2 乗距離、x log x なら KL。2 番目の引数の中心はいつも算術平均' },
+      ]},
+      { no: 'STEP 3', title: '学習と推定', items: [
+        { id: '08_natural_gradient', title: '自然勾配', desc: '正規分布の学習を (μ, σ) と (μ, log σ) の 2 つの座標で。ふつうの勾配は道が変わり、自然勾配はほとんど変わらない' },
+        { id: '09_em_geometry', title: 'EM 法は 2 つの射影', desc: '2 つの正規分布の混合を当てはめる。E は e-射影、M は m-射影。対数尤度は必ず増え、すき間 = KL' },
+        { id: '10_max_entropy', title: '最大エントロピー', desc: '平均 4.5 のサイコロ（ジェインズ）。ラグランジュ乗数をニュートン法で解くと p_i ∝ exp(λi)、どの候補よりエントロピーが大きい' },
+        { id: '11_alpha_divergence', title: 'α-ダイバージェンスの家族', desc: 'α で KL(p‖q)・ヘリンジャー・KL(q‖p) がつながる。α-測地線と、2 山の分布を 1 山で近似するときのちがい' },
+      ]},
+      { no: 'STEP 4', title: 'ひろがり', items: [
+        { id: '12_mutual_information', title: '相互情報量と独立', desc: '同時分布の表から独立な表への KL = 相互情報量。3 変数では「2 つずつ」と「3 つ全体」にピタゴラスで分かれる（XOR）' },
+        { id: '13_fisher_rao_sphere', title: '球に乗せた分布', desc: 'p → 2√p で確率の三角形が球の 1/8 に。フィッシャー-ラオ距離 = 大円の長さを 3D で回して見る', tags: ['3D'] },
+      ]},
+      { no: 'STEP 5', title: '音・自由制作', items: [
+        { id: '14_divergence_sound', title: '分布を聞く', desc: '8 つの音の確率分布からメロディ。目標へ m-測地線・e-測地線・自然勾配・ふつうの勾配で近づけて聞き比べる', tags: ['SOUND'] },
+      ]},
+      { no: 'EXTRA', title: '発展編', items: [
+        { id: '15_webcam_histogram_geometry', title: 'カメラ映像の色の分布', desc: '8×6 のブロックごとの色のヒストグラムと基準とのフィッシャー-ラオ距離（または KL）をヒートマップに', tags: ['CAMERA'] },
+      ]},
+    ];
+
+    const list = document.getElementById('list');
+    for (const g of GROUPS) {
+      const sec = document.createElement('section');
+      sec.className = 'group';
+      sec.innerHTML = `<div class="group-head"><span class="no">${g.no}</span><h2>${g.title}</h2></div>` +
+        (g.note ? `<p class="group-note">${g.note}</p>` : '');
+      for (const s of g.items) sec.appendChild(makeItem(s));
+      list.appendChild(sec);
+    }
+
+    function makeItem(s) {
+      const path = `sketches/${s.id}/sketch.js`;
+      const d = document.createElement('details');
+      d.innerHTML = `
+        <summary>
+          <span class="num">${s.id.slice(0, 2)}</span>
+          <span><span class="title">${s.title}</span><span class="desc">${s.desc}</span></span>
+          <span class="tags">${(s.tags || []).map(t => `<span class="tag">${t}</span>`).join('')}</span>
+          <span class="chev">+</span>
+        </summary>
+        <div class="body">
+          <div class="toolbar">
+            <button class="btn small primary copy">コードをコピー</button>
+            <a class="btn small" href="sketches/${s.id}/index.html" target="_blank" rel="noopener">動かしてみる ↗</a>
+            <a class="btn small" href="https://github.com/${REPO}/blob/main/series67/${path}" target="_blank" rel="noopener">GitHub</a>
+          </div>
+          <pre><code>読み込み中…</code></pre>
+        </div>`;
+      const code = d.querySelector('code');
+      const btn = d.querySelector('.copy');
+      let text = '';
+      fetch(path)
+        .then(r => r.text())
+        .then(t => { text = t; code.textContent = t; })
+        .catch(() => { code.textContent = '読み込みに失敗しました。「GitHub」から開いてください。'; });
+      btn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch (e) {
+          const ta = document.createElement('textarea');
+          ta.value = text; document.body.appendChild(ta); ta.select();
+          document.execCommand('copy'); ta.remove();
+        }
+        btn.textContent = 'コピーしました';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'コードをコピー'; btn.classList.remove('copied'); }, 1500);
+      });
+      return d;
+    }
+  </script>
+</body>
+</html>
